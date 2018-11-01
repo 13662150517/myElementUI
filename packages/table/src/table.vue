@@ -454,12 +454,17 @@
       },
 
       getScrollX() {
-        let scrollX = this.layout.scrollX;
-        if (this.layout.autoWidth) {
+        const layout = this.layout;
+        let scrollX = layout.scrollX;
+        if (layout.autoWidth) {
           let data = this.data;
           if (data && data.length !== 0) {
             let tableWidth = this.$el.offsetWidth;
             let tableBodyWidth = this.tableBodyWidth;
+            if (layout.scrollY) {
+              const gutterWidth = layout.gutterWidth;
+              tableBodyWidth += gutterWidth;
+            }
             scrollX = tableBodyWidth > tableWidth;
           }
         }
