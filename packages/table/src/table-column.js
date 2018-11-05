@@ -32,12 +32,12 @@ const defaults = {
 
 const forced = {
   selection: {
-    renderHeader: function(h, { store }) {
+    renderHeader: function(h, { store, column }) {
       return <el-checkbox
         disabled={ store.states.data && store.states.data.length === 0 }
         indeterminate={ store.states.selection.length > 0 && !this.isAllSelected }
         nativeOn-click={ this.toggleAllSelection }
-        value={ this.isAllSelected } />;
+        value={ this.isAllSelected }>{ column.label }</el-checkbox>;
     },
     renderCell: function(h, { row, column, store, $index }) {
       return <el-checkbox

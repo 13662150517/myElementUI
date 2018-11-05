@@ -115,7 +115,6 @@ class TableLayout {
 
   updateColumnsWidth() {
     if (Vue.prototype.$isServer) return;
-    console.log('updateColumnsWidth');
     const fit = this.fit;
     const bodyWidth = this.table.$el.clientWidth;
     let bodyMinWidth = 0;
