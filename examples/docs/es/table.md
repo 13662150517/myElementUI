@@ -234,6 +234,12 @@
     
         return sums;
       },
+      resetDateFilter() {
+        this.$refs.filterTable.clearFilter('date');
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
       setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
       },
@@ -1353,7 +1359,10 @@ Filtra la tabla para encontrar la información que necesita.
 :::demo Establezca el atributo `filters` y `filter-method` en `el-table-column` haciendo esta columna filtrable. `filters` es un arreglo, y `filter-method` es una función que decide que filas se muestra. Esta tiene tres parámetros: `value`, `row` y `column`.
 ```html
 <template>
+  <el-button @click="resetDateFilter">清除日期过滤器</el-button>
+  <el-button @click="clearFilter">清除所有过滤器</el-button>
   <el-table
+    ref="filterTable"
     :data="tableData"
     style="width: 100%">
     <el-table-column
@@ -1361,6 +1370,7 @@ Filtra la tabla para encontrar la información que necesita.
       label="Fecha"
       sortable
       width="180"
+      column-key="date"
       :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
       :filter-method="filterHandler"
     >
@@ -1419,6 +1429,12 @@ Filtra la tabla para encontrar la información que necesita.
       }
     },
     methods: {
+      resetDateFilter() {
+        this.$refs.filterTable.clearFilter('date');
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
       formatter(row, column) {
         return row.address;
       },
@@ -1520,7 +1536,7 @@ Personalice la columna de la tabla para que pueda integrarse con otros component
 ### Table with custom header
 
 Customize table header so it can be even more customized.
-:::demo You can customize how the header looks by [Default slot content](https://vuejs.org/v2/guide/components-slots.html#Default-Slot-Content).
+:::demo You can customize how the header looks by header [scoped slots](https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots).
 ```html
 <template>
   <el-table
@@ -1536,7 +1552,7 @@ Customize table header so it can be even more customized.
     </el-table-column>
     <el-table-column
       align="right">
-      <template slot="header" slot-scope="slot">
+      <template slot="header" slot-scope="scope">
         <el-input
           v-model="search"
           size="mini"
@@ -1580,8 +1596,12 @@ Customize table header so it can be even more customized.
       }
     },
     methods: {
-      handleEdit(){},
-      handleDelete(){}
+      handleEdit(index, row) {
+        console.log(index, row);
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
+      }
     },
   }
 </script>
@@ -2099,7 +2119,7 @@ Puede personalizar el índice de la fila con la propiedad `type=index` de las co
 | toggleRowExpansion | utilizado en tabla expandible, alterna si una cierta fila es expandida. Con el segundo parámetro, puede directamente establecer si esta fila es expandida o colapsada | row, expanded |
 | setCurrentRow      | utilizado en tabla con selección sencilla, establece una cierta fila seleccionada. Si es llamado sin ningún parámetro, este puede limpiar la selección | row           |
 | clearSort          | limpiar ordenamiento, restaurar datos a orden original | —             |
-| clearFilter        | limpiar filtros                          | —             |
+| clearFilter        | 不传入参数时用于清空所有过滤条件，数据会恢复成未过滤的状态，也可传入由columnKey组成的数组以清除指定列的过滤条件  | columnKey |
 | doLayout | refresca el layout del Table. Cuando la visibilidad de Table cambia, puede que necesite llamar a este método para obtener un diseño correcto | — |
 | sort | Ordenar tabla manualmente. La propiedad `prop` se utiliza para establecer la columna de ordenación, la propiedad `order` se utiliza para establecer el orden. | prop: string, order: string |
 
@@ -2142,5 +2162,5 @@ Puede personalizar el índice de la fila con la propiedad `type=index` de las co
 ### Table-column Scoped Slot
 | Name | Description |
 |------|--------|
-| — | Custom content for table columns. The scope parameter is { row, column, $index } |
-| header | Custom content for table header. The scope parameter is { column, $index } |
+| — | Contenido personalizado para las columnas de la tabla. El parámetro del scope es { row, column, $index } |
+| header | Contenido personalizado para el encabezado de la tabla. El parámetro del scope es { column, $index } |

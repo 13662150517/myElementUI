@@ -139,6 +139,7 @@ export default {
           return;
         }
 
+        maxWidth = Math.ceil(maxWidth);
         let colWidth = Math.max(maxWidth, column.minWidth, column.realWidth);
         colWidthObj[column.id] = colWidth;
       });

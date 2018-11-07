@@ -39,14 +39,17 @@ class TableLayout {
     }
   }
 
-  updateScrollY() {
+  updateScrollY(scrollX) {
+    if (scrollX === undefined) {
+      scrollX = this.scrollX;
+    }
     const height = this.height;
     if (typeof height !== 'string' && typeof height !== 'number') return;
     const bodyWrapper = this.table.bodyWrapper;
     if (this.table.$el && bodyWrapper) {
       const body = bodyWrapper.querySelector('.el-table__body');
       let offsetHeight = body.offsetHeight;
-      offsetHeight = this.scrollX ? offsetHeight + this.gutterWidth : offsetHeight;
+      offsetHeight = scrollX ? offsetHeight + this.gutterWidth : offsetHeight;
       this.scrollY = offsetHeight > this.bodyHeight;
     }
   }

@@ -7,7 +7,7 @@
       'el-table--hidden': isHidden,
       'el-table--group': isGroup,
       'el-table--fluid-height': maxHeight,
-      'el-table--scrollable-x': getScrollX(),
+      'el-table--scrollable-x': getScrollX(true),
       'el-table--scrollable-y': layout.scrollY,
       'el-table--enable-row-hover': !store.states.isComplex,
       'el-table--enable-row-transition': (store.states.data || []).length !== 0 && (store.states.data || []).length < 100
@@ -32,7 +32,7 @@
     <div
       class="el-table__body-wrapper"
       ref="bodyWrapper"
-      :class="[layout.scrollX ? `is-scrolling-${scrollPosition}` : 'is-scrolling-none']"
+      :class="[getScrollX() ? `is-scrolling-${scrollPosition}` : 'is-scrolling-none']"
       :style="[bodyHeight]">
       <table-body
         :context="context"
@@ -453,7 +453,7 @@
         this.store.commit('toggleAllSelection');
       },
 
-      getScrollX() {
+      getScrollX(isUpdate = false) {
         const layout = this.layout;
         let scrollX = layout.scrollX;
         if (layout.autoWidth) {
@@ -466,6 +466,9 @@
               tableBodyWidth += gutterWidth;
             }
             scrollX = tableBodyWidth > tableWidth;
+          }
+          if (isUpdate) {
+            layout.updateScrollY(scrollX);
           }
         }
 
@@ -571,18 +574,29 @@
       },
 
       fixedBodyHeight() {
+        const scrollX = this.getScrollX();
+        const layout = this.layout;
         if (this.height) {
+          let fixedBodyHeight = layout.fixedBodyHeight;
+          if (!fixedBodyHeight) {
+            return {
+              height: ''
+            };
+          }
+          if (scrollX !== layout.scrollX) {
+            fixedBodyHeight -= layout.gutterWidth;
+          }
           return {
-            height: this.layout.fixedBodyHeight ? this.layout.fixedBodyHeight + 'px' : ''
+            height: fixedBodyHeight + 'px'
           };
         } else if (this.maxHeight) {
-          let maxHeight = this.layout.scrollX ? this.maxHeight - this.layout.gutterWidth : this.maxHeight;
+          let maxHeight = scrollX ? this.maxHeight - this.layout.gutterWidth : this.maxHeight;
 
           if (this.showHeader) {
-            maxHeight -= this.layout.headerHeight;
+            maxHeight -= layout.headerHeight;
           }
 
-          maxHeight -= this.layout.footerHeight;
+          maxHeight -= layout.footerHeight;
 
           return {
             'max-height': maxHeight + 'px'
@@ -593,6 +607,7 @@
       },
 
       fixedHeight() {
+        const scrollX = this.getScrollX();
         if (this.maxHeight) {
           if (this.showSummary) {
             return {
@@ -600,16 +615,27 @@
             };
           }
           return {
-            bottom: (this.layout.scrollX && this.data.length) ? this.layout.gutterWidth + 'px' : ''
+            bottom: (scrollX && this.data.length) ? this.layout.gutterWidth + 'px' : ''
           };
         } else {
+          const layout = this.layout;
           if (this.showSummary) {
             return {
-              height: this.layout.tableHeight ? this.layout.tableHeight + 'px' : ''
+              height: layout.tableHeight ? layout.tableHeight + 'px' : ''
             };
           }
+
+          let viewportHeight = layout.viewportHeight;
+          if (!viewportHeight) {
+            return {
+              height: ''
+            };
+          }
+          if (scrollX !== layout.scrollX) {
+            viewportHeight -= layout.gutterWidth;
+          }
           return {
-            height: this.layout.viewportHeight ? this.layout.viewportHeight + 'px' : ''
+            height: viewportHeight + 'px'
           };
         }
       }

@@ -243,6 +243,9 @@
     &.el-auto-width{
       white-space: nowrap;
       text-overflow: clip;
+      >.el-cell-text{
+        display: inline-block;
+      }
     }
   }
 
