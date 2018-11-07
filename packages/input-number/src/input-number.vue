@@ -29,13 +29,13 @@
     <el-input
       ref="input"
       :value="currentInputValue"
+      :placeholder="placeholder"
       :disabled="inputNumberDisabled"
       :size="inputNumberSize"
       :max="max"
       :min="min"
       :name="name"
       :label="label"
-      :placeholder="placeholder"
       @keydown.up.native.prevent="increase"
       @keydown.down.native.prevent="decrease"
       @blur="handleBlur"
@@ -92,6 +92,7 @@
       },
       name: String,
       label: String,
+      placeholder: String,
       precision: {
         type: Number,
         validator(val) {
@@ -101,8 +102,7 @@
       isDecimalZero: {
         type: Boolean,
         default: false
-      },
-      placeholder: String
+      }
     },
     data() {
       return {
@@ -242,6 +242,9 @@
         if (!isNaN(newVal) || value === '') {
           this.setCurrentValue(newVal);
         }
+      },
+      select() {
+        this.$refs.input.select();
       }
     },
     mounted() {
