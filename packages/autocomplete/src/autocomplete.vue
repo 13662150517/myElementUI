@@ -11,6 +11,7 @@
       ref="input"
       v-bind="[$props, $attrs]"
       @input="handleChange"
+      @change="handleInputChange"
       @focus="handleFocus"
       @blur="handleBlur"
       @clear="handleClear"
@@ -130,7 +131,8 @@
         suggestions: [],
         loading: false,
         highlightedIndex: -1,
-        suggestionDisabled: false
+        suggestionDisabled: false,
+        hasInputChange: false
       };
     },
     computed: {
@@ -146,6 +148,14 @@
     watch: {
       suggestionVisible(val) {
         this.broadcast('ElAutocompleteSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth]);
+      },
+      activated() {
+        if (!this.activated) {
+          if (this.hasInputChange) {
+            this.$emit('change', this.value);
+            this.hasInputChange = false;
+          }
+        }
       }
     },
     methods: {
@@ -184,6 +194,9 @@
         }
         this.debouncedGetData(value);
       },
+      handleInputChange() {
+        this.hasInputChange = true;
+      },
       handleFocus(event) {
         this.activated = true;
         this.$emit('focus', event);
@@ -213,8 +226,13 @@
         }
       },
       select(item) {
+        let oldValue = this.value;
         this.$emit('input', item[this.valueKey]);
         this.$emit('select', item);
+        this.hasInputChange = false;
+        if (oldValue !== item[this.valueKey]) {
+          this.$emit('change', item[this.valueKey]);
+        }
         this.$nextTick(_ => {
           this.suggestions = [];
           this.highlightedIndex = -1;
