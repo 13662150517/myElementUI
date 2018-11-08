@@ -262,6 +262,10 @@
         }
         this.highlightedIndex = index;
         this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`);
+      },
+      clearSuggestions() {
+        this.suggestions = [];
+        this.highlightedIndex = -1;
       }
     },
     mounted() {
