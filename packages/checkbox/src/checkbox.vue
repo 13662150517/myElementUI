@@ -209,6 +209,10 @@
     watch: {
       value(value) {
         this.dispatch('ElFormItem', 'el.form.change', value);
+      },
+
+      checked() {
+        this.model = this.checked;
       }
     }
   };
