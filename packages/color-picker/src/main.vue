@@ -118,7 +118,7 @@
         if (this.colorDisabled) return;
         this.showPicker = !this.showPicker;
       },
-      confirmValue(value) {
+      confirmValue() {
         const value = this.color.value;
         this.$emit('input', value);
         this.$emit('change', value);
