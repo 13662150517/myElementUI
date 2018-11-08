@@ -1,5 +1,6 @@
 ## autocomplete
 1.新增`change`事件，当input框或者选中建议，引起输入框内容改变时触发，回调参数 `(value:string)`。
+
 2.新增`clearSuggestions`方法，用于清除建议。
 
 ## checkbox
