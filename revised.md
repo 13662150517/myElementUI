@@ -9,5 +9,8 @@
 ## input-number
 1.新增`is-decimal-zero`属性，默认值`false`，为`true`时，在保留小数后，会去除小数最后面的0。
 
+## table
+1.`height`属性添加`parent`值录入，表格高度随父级节点的改变而改变。
+
 ## table-item
 1.新增`auto-width`属性，默认值`false`，为`true`时，该列宽度根据该列的内容进行自适应，最小宽度为 min-width 配置。

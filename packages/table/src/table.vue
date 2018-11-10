@@ -410,7 +410,10 @@
           }
         });
 
-        if (this.fit) {
+        if (this.height === 'parent') {
+          addResizeListener(this.$el, this.resizeListener);
+          addResizeListener(this.$el.parentNode, this.heightResizeListener);
+        } else if (this.fit) {
           addResizeListener(this.$el, this.resizeListener);
         }
       },
@@ -436,6 +439,17 @@
           this.resizeState.height = height;
           this.doLayout();
         }
+      },
+
+      heightResizeListener() {
+        if (!this.$ready) return;
+        const el = this.$el;
+        const tableEl = el.parentNode;
+        if (tableEl === null) {
+          return;
+        }
+        const height = Math.floor(tableEl.offsetHeight);
+        el.style.height = height + 'px';
       },
 
       doLayout() {
@@ -684,6 +698,7 @@
 
     destroyed() {
       if (this.resizeListener) removeResizeListener(this.$el, this.resizeListener);
+      if (this.heightResizeListener) removeResizeListener(this.$el.parentNode, this.heightResizeListener);
     },
 
     mounted() {

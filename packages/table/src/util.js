@@ -120,3 +120,25 @@ export const getRowIdentity = (row, rowKey) => {
     return rowKey.call(null, row);
   }
 };
+
+export const isSameColumns = (columns1, columns2) => {
+  if (columns1 === null && columns2 === null) {
+    return true;
+  }
+
+  if (columns1 === null || columns2 === null) {
+    return false;
+  }
+
+  if (columns1.length !== columns2.length) {
+    return false;
+  }
+
+  const len = columns1.length;
+  for (let i = 0; i < len; i++) {
+    if (columns1[i] !== columns2[i]) {
+      return false;
+    }
+  }
+  return true;
+};

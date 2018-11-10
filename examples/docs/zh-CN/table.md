@@ -1706,7 +1706,7 @@
         <el-input
           v-model="search"
           size="mini"
-          :placeholder="scope"/>
+          placeholder="输入关键字搜索"/>
       </template>
       <template slot-scope="scope">
         <el-button
