@@ -1,13 +1,18 @@
 import $ from 'jquery';
-import { isEmptyObject } from 'element-ui/src/utils/util';
-import { isSameColumns } from './util';
+import {
+  isEmptyObject
+} from 'element-ui/src/utils/util';
+import {
+  isSameColumns
+} from './util';
 
 export default {
   data() {
     return {
       tableData: null,
       colWidthObj: {},
-      tableColumns: null
+      tableColumns: null,
+      oldTablWidth: null
     };
   },
 
@@ -111,11 +116,13 @@ export default {
 
     resetColumnWidth(flattenColumns) {
       let tableData = this.table.store.states.data;
-      if (tableData === this.tableData && isSameColumns(this.tableColumns, flattenColumns)) {
+      let width = this.table.resizeState.width;
+      if (tableData === this.tableData && this.oldTablWidth === width && isSameColumns(this.tableColumns, flattenColumns)) {
         return;
       }
       this.tableData = tableData;
       this.tableColumns = flattenColumns;
+      this.oldTablWidth = width;
       let colWidthObj = {};
       flattenColumns.forEach(column => {
         if (!column.autoWidth) {
@@ -141,7 +148,7 @@ export default {
         }
 
         maxWidth = Math.ceil(maxWidth);
-        let minWidth = column.minWidth ? column.minWidth : 80;
+        let minWidth = column.minWidth !== undefined ? column.minWidth : 80;
         let colWidth = Math.max(maxWidth, minWidth, column.realWidth);
         colWidthObj[column.id] = colWidth;
       });
