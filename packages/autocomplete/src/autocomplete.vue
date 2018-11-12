@@ -132,7 +132,9 @@
         loading: false,
         highlightedIndex: -1,
         suggestionDisabled: false,
-        hasInputChange: false
+        hasInputChange: false,
+        oldValue: this.value,
+        hasInput: false
       };
     },
     computed: {
@@ -149,13 +151,21 @@
       suggestionVisible(val) {
         this.broadcast('ElAutocompleteSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth]);
       },
-      activated() {
-        if (!this.activated) {
+      activated(val) {
+        if (!val) {
           if (this.hasInputChange) {
             this.$emit('change', this.value);
+            this.oldValue = this.value;
             this.hasInputChange = false;
           }
         }
+      },
+      value(val) {
+        if (this.hasInput) {
+          this.hasInput = false;
+          return;
+        }
+        this.oldValue = val;
       }
     },
     methods: {
@@ -186,6 +196,9 @@
       },
       handleChange(value) {
         this.$emit('input', value);
+        if (value !== this.oldValue) {
+          this.hasInput = true;
+        }
         this.suggestionDisabled = false;
         if (!this.triggerOnFocus && !value) {
           this.suggestionDisabled = true;
@@ -226,12 +239,15 @@
         }
       },
       select(item) {
-        let oldValue = this.value;
-        this.$emit('input', item[this.valueKey]);
+        let oldValue = this.oldValue;
+        const newValue = item[this.valueKey];
+        this.$emit('input', newValue);
         this.$emit('select', item);
         this.hasInputChange = false;
-        if (oldValue !== item[this.valueKey]) {
-          this.$emit('change', item[this.valueKey]);
+        if (oldValue !== newValue) {
+          this.oldValue = newValue;
+          this.$emit('change', newValue);
+          this.hasInput = true;
         }
         this.$nextTick(_ => {
           this.suggestions = [];
