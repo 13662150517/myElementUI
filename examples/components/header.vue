@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="postcss" scoped>
   .headerWrapper {
     height: 80px;
   }
@@ -105,10 +105,9 @@
         }
 
         .nav-lang {
-          cursor: pointer;
           display: inline-block;
           height: 100%;
-          color: #888;
+          color: #409eff;
 
           &:hover {
             color: #409EFF;
@@ -262,7 +261,6 @@
     <header class="header" ref="header">
       <div class="container">
         <h1><router-link :to="`/${ lang }`">
-          <!-- logo -->
           <slot>
             <img
               src="../assets/images/element-logo.svg"
@@ -273,9 +271,7 @@
               alt="element-logo"
               class="nav-logo-small">
           </slot>
-
         </router-link></h1>
-
         <!-- nav -->
         <ul class="nav">
           <li class="nav-item nav-algolia-search" v-show="isComponentPage">
@@ -332,26 +328,9 @@
 
           <!-- 语言选择器 -->
           <li class="nav-item lang-item">
-            <el-dropdown
-              trigger="click"
-              class="nav-dropdown nav-lang"
-              :class="{ 'is-active': langDropdownVisible }">
-              <span>
-                {{ displayedLang }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu
-                slot="dropdown"
-                class="nav-dropdown-list"
-                @input="handleLangDropdownToggle">
-                <el-dropdown-item
-                  v-for="(value, key) in langs"
-                  :key="key"
-                  @click.native="switchLang(key)">
-                  {{ value }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <div class="nav-lang">
+              <span>中文</span>
+            </div>
           </li>
           
           <!--theme picker-->
@@ -376,12 +355,8 @@
         versions: [],
         version,
         verDropdownVisible: true,
-        langDropdownVisible: true,
-        langs: {
-          'zh-CN': '中文',
-          'en-US': 'English',
-          'es': 'Español'
-        }
+        langConfig: compoLang[0].header,
+        lang: 'zh-CN'
       };
     },
 
@@ -391,15 +366,6 @@
     },
 
     computed: {
-      lang() {
-        return this.$route.path.split('/')[1] || 'zh-CN';
-      },
-      displayedLang() {
-        return this.langs[this.lang] || '中文';
-      },
-      langConfig() {
-        return compoLang.filter(config => config.lang === this.lang)[0]['header'];
-      },
       isComponentPage() {
         return /^component/.test(this.$route.name);
       }
@@ -411,18 +377,8 @@
         location.href = `${ location.origin }/${ this.versions[version] }/${ location.hash } `;
       },
 
-      switchLang(targetLang) {
-        if (this.lang === targetLang) return;
-        localStorage.setItem('ELEMENT_LANGUAGE', targetLang);
-        this.$router.push(this.$route.path.replace(this.lang, targetLang));
-      },
-
       handleVerDropdownToggle(visible) {
         this.verDropdownVisible = visible;
-      },
-
-      handleLangDropdownToggle(visible) {
-        this.langDropdownVisible = visible;
       }
     },
 

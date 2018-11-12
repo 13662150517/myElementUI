@@ -5,7 +5,7 @@
     v-model="theme"></el-color-picker>
 </template>
 
-<style>
+<style lang="postcss">
   .theme-picker {
     height: 80px;
     display: inline-block;
