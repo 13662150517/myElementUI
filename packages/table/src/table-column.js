@@ -186,6 +186,10 @@ export default {
       default: true
     },
     index: [Number, Function],
+    hidden: {
+      type: Boolean,
+      default: false
+    },
     sortOrders: {
       type: Array,
       default() {
@@ -282,7 +286,8 @@ export default {
       filterPlacement: this.filterPlacement || '',
       index: this.index,
       sortOrders: this.sortOrders,
-      autoWidth: this.autoWidth
+      autoWidth: this.autoWidth,
+      hidden: this.hidden
     });
 
     let source = forced[type] || {};
@@ -445,11 +450,34 @@ export default {
       if (this.columnConfig) {
         this.columnConfig.labelClassName = newVal;
       }
+    },
+
+    autoWidth(newVal) {
+      if (this.columnConfig) {
+        this.columnConfig.autoWidth = newVal;
+        this.owner.store.scheduleLayout();
+      }
+    },
+
+    hidden(newVal) {
+      if (this.columnConfig) {
+        this.columnConfig.hidden = newVal;
+        this.owner.store.updateColumns();
+        this.owner.store.scheduleLayout();
+      }
     }
   },
 
   mounted() {
     const owner = this.owner;
+    const hideColumnKeys = owner.hideColumnKeys;
+    if (hideColumnKeys) {
+      if (hideColumnKeys.indexOf(this.columnKey) !== -1) {
+        this.columnConfig.hidden = true;
+      } else {
+        this.columnConfig.hidden = false;
+      }
+    }
     const parent = this.columnOrTableParent;
     let columnIndex;
 
@@ -466,7 +494,6 @@ export default {
         this.columnConfig.renderHeader = (h, scope) => this.$scopedSlots.header(scope);
       }
     }
-
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   }
 };

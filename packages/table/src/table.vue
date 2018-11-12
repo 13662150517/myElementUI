@@ -308,6 +308,8 @@
 
       spanMethod: Function,
 
+      hideColumnKeys: Array,
+
       selectOnIndeterminate: {
         type: Boolean,
         default: true
@@ -693,6 +695,10 @@
             this.store.setExpandRowKeys(newVal);
           }
         }
+      },
+
+      hideColumnKeys(hideKeys) {
+        this.store.commit('updateHideColumns', hideKeys);
       }
     },
 

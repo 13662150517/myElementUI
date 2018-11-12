@@ -321,6 +321,19 @@ TableStore.prototype.mutations = {
     }
   },
 
+  updateHideColumns(states, hideKeys) {
+    const _columns = states._columns || [];
+    hideKeys = hideKeys || [];
+    _columns.forEach(column => {
+      const columnKey = column.columnKey;
+      column.hidden = hideKeys.indexOf(columnKey) !== -1;
+    });
+    if (this.table.$ready) {
+      this.updateColumns();
+      this.scheduleLayout();
+    }
+  },
+
   setHoverRow(states, row) {
     states.hoverRow = row;
   },
@@ -397,7 +410,8 @@ const doFlattenColumns = (columns) => {
 
 TableStore.prototype.updateColumns = function() {
   const states = this.states;
-  const _columns = states._columns || [];
+  let _columns = states._columns || [];
+  _columns = _columns.filter((column) => !column.hidden);
   states.fixedColumns = _columns.filter((column) => column.fixed === true || column.fixed === 'left');
   states.rightFixedColumns = _columns.filter((column) => column.fixed === 'right');
 
