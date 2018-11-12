@@ -76,7 +76,7 @@
 
   .main-cnt {
     margin-top: -80px;
-    padding: 80px 0 340px;
+    padding: 80px 0 0;
     box-sizing: border-box;
     min-height: 100%;
   }
@@ -179,7 +179,6 @@
     <div class="main-cnt">
       <router-view></router-view>
     </div>
-    <main-footer v-if="lang !== 'play' && !isComponent"></main-footer>
   </div>
 </template>
 
