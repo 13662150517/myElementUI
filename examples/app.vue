@@ -1,4 +1,4 @@
-<style lang="postcss">
+<style lang="stylus">
   @import 'highlight.js/styles/color-brewer.css';
   @import 'assets/styles/common.css';
   @import 'assets/styles/fonts/style.css';
