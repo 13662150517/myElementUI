@@ -458,6 +458,7 @@ export default {
   <el-col :span="12">
     <div class="sub-title">激活即列出输入建议</div>
     <el-autocomplete
+    clearable
       class="inline-input"
       v-model="state1"
       :fetch-suggestions="querySearch"

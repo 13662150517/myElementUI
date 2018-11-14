@@ -91,6 +91,10 @@
       popperClass: String,
       popperOptions: Object,
       placeholder: String,
+      clearable: {
+        type: Boolean,
+        default: false
+      },
       disabled: Boolean,
       name: String,
       size: String,
@@ -221,6 +225,7 @@
         this.$emit('blur', event);
       },
       handleClear() {
+        this.activated = false;
         this.$emit('clear');
       },
       close(e) {
