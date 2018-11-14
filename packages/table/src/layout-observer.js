@@ -16,6 +16,14 @@ export default {
     };
   },
 
+  watch: {
+    tableScrollX: function() {
+      if (this.tableLayout.autoWidth) {
+        this.onBodyColumnsChange(this.tableLayout, this.tableLayout.observers);
+      }
+    }
+  },
+
   created() {
     this.tableLayout.addObserver(this);
   },
@@ -34,6 +42,14 @@ export default {
         throw new Error('Can not find table layout.');
       }
       return layout;
+    },
+
+    tableScrollX() {
+      const tableLayout = this.tableLayout;
+      return {
+        scrollX: tableLayout.scrollX,
+        scrollY: tableLayout.scrollY
+      };
     }
   },
 
@@ -83,13 +99,16 @@ export default {
       if ($(this.$el).find('colgroup > col').length === 0) {
         return;
       }
-      this.resetColumnWidth(flattenColumns);
+      this.updateColumnWidth(flattenColumns);
+      let colWidthObj = this.colWidthObj;
+      this.calColumnWidth(flattenColumns, colWidthObj);
+      this.tableLayout.colWidthObj = colWidthObj;
+
       const columnsMap = {};
       flattenColumns.forEach((column) => {
         columnsMap[column.id] = column;
       });
-      const colWidthObj = this.colWidthObj;
-      this.tableLayout.colWidthObj = colWidthObj;
+
       for (let i = 0; i < observers.length; i++) {
         const observer = observers[i];
         const cols = observer.$el.querySelectorAll('colgroup > col');
@@ -103,22 +122,22 @@ export default {
           if (column !== undefined) {
             realWidth = colWidthObj[column.id];
             if (realWidth === undefined) {
-              realWidth = column.realWidth;
+              realWidth = column.realWidth || column.width;
             }
           }
           if (column) {
-            col.setAttribute('width', realWidth || column.width);
+            col.setAttribute('width', realWidth);
           }
         }
       }
-      this.calScroll(flattenColumns);
+      this.calScroll(flattenColumns, colWidthObj);
     },
 
-    resetColumnWidth(flattenColumns) {
+    updateColumnWidth(flattenColumns) {
       let tableData = this.table.store.states.data;
       let width = this.table.resizeState.width;
       if (tableData === this.tableData && this.oldTablWidth === width && isSameColumns(this.tableColumns, flattenColumns)) {
-        return;
+        return false;
       }
       this.tableData = tableData;
       this.tableColumns = flattenColumns;
@@ -149,14 +168,65 @@ export default {
 
         maxWidth = Math.ceil(maxWidth);
         let minWidth = column.minWidth !== undefined ? column.minWidth : 80;
-        let colWidth = Math.max(maxWidth, minWidth, column.realWidth);
+        let colWidth = Math.max(maxWidth, minWidth);
         colWidthObj[column.id] = colWidth;
       });
       this.colWidthObj = colWidthObj;
+      return true;
     },
 
-    calScroll(flattenColumns) {
-      const colWidthObj = this.colWidthObj;
+    calColumnWidth(flattenColumns, colWidthObj) {
+      let flexColumns = flattenColumns.filter((column) => typeof column.width !== 'number');
+      if (flexColumns.length === 0) {
+        return;
+      }
+
+      const bodyWidth = this.table.$el.clientWidth;
+      let bodyMinWidth = 0;
+      flattenColumns.forEach(column => {
+        const width = this.getRealColumnWidth(colWidthObj, column);
+        bodyMinWidth += width;
+      });
+
+      const tableLayout = this.tableLayout;
+      const scrollYWidth = tableLayout.scrollY ? tableLayout.gutterWidth : 0;
+      const totalFlexWidth = bodyWidth - scrollYWidth - bodyMinWidth;
+      if (totalFlexWidth <= 0) {
+        return;
+      }
+
+      if (flexColumns.length === 1) {
+        const width = this.getRealColumnWidth(colWidthObj, flexColumns[0]);
+        colWidthObj[flexColumns[0].id] = width + totalFlexWidth;
+      } else {
+        const allColumnsWidth = flexColumns.reduce((prev, column) => {
+          const width = this.getRealColumnWidth(colWidthObj, column);
+          return prev + width;
+        }, 0);
+        const flexWidthPerPixel = totalFlexWidth / allColumnsWidth;
+        let noneFirstWidth = 0;
+
+        flexColumns.forEach((column, index) => {
+          if (index === 0) return;
+          const flexWidth = Math.floor(this.getRealColumnWidth(colWidthObj, column) * flexWidthPerPixel);
+          noneFirstWidth += flexWidth;
+          const width = this.getRealColumnWidth(colWidthObj, column);
+          colWidthObj[column.id] = width + flexWidth;
+        });
+
+        colWidthObj[flexColumns[0].id] = this.getRealColumnWidth(colWidthObj, flexColumns[0]) + totalFlexWidth - noneFirstWidth;
+      }
+    },
+
+    getRealColumnWidth(colWidthObj, column) {
+      let width = colWidthObj[column.id];
+      if (!width) {
+        width = column.width || column.minWidth || 80;
+      }
+      return width;
+    },
+
+    calScroll(flattenColumns, colWidthObj) {
       if (isEmptyObject(colWidthObj)) {
         this.table.setTableBodyWidth(null);
         return;
