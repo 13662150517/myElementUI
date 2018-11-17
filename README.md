@@ -9,7 +9,15 @@
 1.选中状态会根据checked属性的改变而改变。
 
 ## input-number
-1.新增`is-decimal-zero`属性，默认值`false`，为`true`时，在保留小数后，会去除小数最后面的0。
+1.新增`is-decimal-zero`属性，数据类型`boolean`，默认值`false`，为`true`时，在保留小数后，会去除小数最后面的0。
+
+2.新增`after-change-format-value`属性，数据类型`function`，在input内容改变、点击计数器改变数值时，调用该方法改变input内容，方法参数值
+<div style="padding-left:20px;">
+(1) newVal:number 改变之后的数值
+
+(2) type:string 改变数值的操作
+'input'输入框change事件 'increase'点击增加按钮 'decrease'点击减少按钮
+</div>
 
 ## table
 1.`height`属性添加`parent`值录入，表格高度随父级节点的改变而改变。
@@ -17,6 +25,6 @@
 2.新增`hide-column-keys`属性(string类型数组)，默认值为`null`，用于隐藏对应的列，根据每列设置的`column-key`值和该数组里的元素来隐藏相应的列(需要隐藏的列必需设置`column-key`)。
 
 ## table-item
-1.新增`auto-width`属性，默认值`false`，为`true`时，该列宽度根据该列的内容进行自适应，最小宽度为 min-width 配置。
+1.新增`auto-width`属性，数据类型`boolean`，默认值`false`，为`true`时，该列宽度根据该列的内容进行自适应，最小宽度为 min-width 配置。
 
-2.新增`hidden`属性，默认值`false`，通过该属性来判断是否显示该列(`true`不显示该列，`false`显示该列)。
+2.新增`hidden`属性，数据类型`boolean`，默认值`false`，通过该属性来判断是否显示该列(`true`不显示该列，`false`显示该列)。

@@ -99,6 +99,7 @@
           return val >= 0 && val === parseInt(val, 10);
         }
       },
+      afterChangeFormatValue: Function,
       isDecimalZero: {
         type: Boolean,
         default: false
@@ -194,14 +195,18 @@
 
         const precisionFactor = Math.pow(10, this.numPrecision);
         // Solve the accuracy problem of JS decimal calculation by converting the value to integer.
-        return this.toPrecision((precisionFactor * val + precisionFactor * step) / precisionFactor);
+        let newVal = this.toPrecision((precisionFactor * val + precisionFactor * step) / precisionFactor);
+        newVal = this.formatValue(newVal, 'increase');
+        return newVal;
       },
       _decrease(val, step) {
         if (typeof val !== 'number' && val !== undefined) return this.currentValue;
 
         const precisionFactor = Math.pow(10, this.numPrecision);
 
-        return this.toPrecision((precisionFactor * val - precisionFactor * step) / precisionFactor);
+        let newVal = this.toPrecision((precisionFactor * val - precisionFactor * step) / precisionFactor);
+        newVal = this.formatValue(newVal, 'decrease');
+        return newVal;
       },
       increase() {
         if (this.inputNumberDisabled || this.maxDisabled) return;
@@ -238,13 +243,32 @@
         this.currentValue = newVal;
       },
       handleInputChange(value) {
-        const newVal = value === '' ? undefined : Number(value);
+        let newVal = value === '' ? undefined : Number(value);
         if (!isNaN(newVal) || value === '') {
+          newVal = this.formatValue(newVal, 'input');
           this.setCurrentValue(newVal);
         }
       },
       select() {
         this.$refs.input.select();
+      },
+      formatValue(newVal, type) {
+        const afterChangeFormatValue = this.afterChangeFormatValue;
+        if (afterChangeFormatValue === undefined) {
+          return newVal;
+        }
+
+        const value = afterChangeFormatValue(newVal, type);
+        if (value === undefined) {
+          return newVal;
+        }
+        if (typeof value === 'number') {
+          return value;
+        }
+        if (value) {
+          return newVal;
+        }
+        return this.value;
       }
     },
     mounted() {
