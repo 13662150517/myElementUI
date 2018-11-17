@@ -1,7 +1,7 @@
 基于element-ui扩展了下列功能
 
 ## autocomplete
-1.新增`change`事件，当input框或者选中建议，引起输入框内容改变时触发，回调参数 `(value:string)`。
+1.新增`change`事件，当input框或者选中建议，引起输入框内容改变时触发，回调参数 `(value:string)`改变之后的value值。
 
 2.新增`clearSuggestions`方法，用于清除建议。
 
@@ -12,12 +12,12 @@
 1.新增`is-decimal-zero`属性，数据类型`boolean`，默认值`false`，为`true`时，在保留小数后，会去除小数最后面的0。
 
 2.新增`after-change-format-value`属性，数据类型`function`，在input内容改变、点击计数器改变数值时，调用该方法改变input内容，方法参数值
-<div style="padding-left:20px;">
 (1) newVal:number 改变之后的数值
-
 (2) type:string 改变数值的操作
-'input'输入框change事件 'increase'点击增加按钮 'decrease'点击减少按钮
-</div>
+`input`输入框change事件 `increase`点击增加按钮 `decrease`点击减少按钮
+方法返回值类型说明
+(1) boolean `true`改变为新的数值 `false` 还原为原来的数值
+(2) number 数值改为返回的`number`类型数据
 
 ## table
 1.`height`属性添加`parent`值录入，表格高度随父级节点的改变而改变。
