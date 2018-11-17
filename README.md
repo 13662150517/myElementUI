@@ -15,6 +15,7 @@
 (1) newVal:number 改变之后的数值<br>
 (2) type:string 改变数值的操作<br>
 `input`输入框change事件 `increase`点击增加按钮 `decrease`点击减少按钮
+
 方法返回值类型说明<br>
 (1) boolean `true`改变为新的数值 `false` 还原为原来的数值<br>
 (2) number 数值改为返回的`number`类型数据
