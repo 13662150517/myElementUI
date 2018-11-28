@@ -149,8 +149,8 @@ export default {
         }
         let rows = this.$el.querySelectorAll('.' + column.id + ' .cell');
         let maxWidth = 0;
-        rows.forEach((row) => {
-          let $row = $(row);
+        for (let i = 0; i < rows.length; i++) {
+          let $row = $(rows[i]);
           if (!$row.parents('table').hasClass('el-table__body')) {
             return;
           }
@@ -161,7 +161,7 @@ export default {
           if (width > maxWidth) {
             maxWidth = width;
           }
-        });
+        }
         if (maxWidth === 0) {
           return;
         }
