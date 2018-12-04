@@ -458,7 +458,6 @@ export default {
   <el-col :span="12">
     <div class="sub-title">激活即列出输入建议</div>
     <el-autocomplete
-    clearable
       class="inline-input"
       v-model="state1"
       :fetch-suggestions="querySearch"
@@ -823,7 +822,7 @@ export default {
 | form | 原生属性 | string | — | — |
 | label | 输入框关联的label文字 | string | — | — |
 | tabindex | 输入框的tabindex | string | - | - |
-| validate-event | 输入时是否触发表单的校验 | boolean | - | - |
+| validate-event | 输入时是否触发表单的校验 | boolean | - | true |
 
 ### Input Slots
 | name | 说明 |
