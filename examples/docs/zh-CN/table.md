@@ -2,6 +2,15 @@
   export default {
     data() {
       return {
+        tableData1:[{
+          date: '2016-05-03',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀',
+          zip: 200333,
+          tag: '家'
+        }],
         tableData: [{
           date: '2016-05-03',
           name: '王小虎',
@@ -368,6 +377,17 @@
 
       indexMethod(index) {
         return index * 2;
+      },
+      btnClick(){
+        this.tableData1.push({
+          date: '2016-05-02',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333,
+          tag: '公司'
+        });
       }
     },
 
@@ -416,20 +436,45 @@
 :::demo 当`el-table`元素中注入`data`对象数组后，在`el-table-column`中用`prop`属性来对应对象中的键名即可填入数据，用`label`属性来定义表格的列名。可以使用`width`属性来定义列宽。
 ```html
   <template>
+  <el-button @click="btnClick">124</el-button>
     <el-table
-      :data="tableData"
+      :data="tableData1"
       style="width: 100%">
+      <el-table-column :resizable="false" type="selection"></el-table-column>
       <el-table-column
         prop="date"
         label="日期"
-        width="180"
-        auto-width>
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="date"
+        label="日期"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="date"
+        label="日期"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="date"
+        label="日期"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="date"
+        label="日期"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="date"
+        label="日期"
+        width="180">
       </el-table-column>
       <el-table-column
         prop="name"
         label="姓名"
-        width="180"
-        auto-width>
+        width="180">
       </el-table-column>
       <el-table-column
         prop="address"

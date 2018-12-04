@@ -121,6 +121,29 @@ export const getRowIdentity = (row, rowKey) => {
   }
 };
 
+export const isSameTableData = (data1, data2) => {
+  if (data1 === null || data2 === null) {
+    if (data1 === data2) {
+      return true;
+    }
+    return false;
+  }
+
+  if (data1.length !== data2.length) {
+    return false;
+  }
+
+  data1 = [].concat(data1);
+  data1.sort();
+  data1 = data1.map(d => d._dataId);
+  data1 = data1.join(',');
+  data2 = [].concat(data2);
+  data2.sort();
+  data2 = data2.map(d => d._dataId);
+  data2 = data2.join(',');
+  return data1 === data2;
+};
+
 export const isSameColumns = (columns1, columns2) => {
   if (columns1 === null && columns2 === null) {
     return true;

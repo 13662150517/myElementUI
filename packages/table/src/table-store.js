@@ -3,6 +3,7 @@ import debounce from 'throttle-debounce/debounce';
 import merge from 'element-ui/src/utils/merge';
 import { hasClass, addClass, removeClass } from 'element-ui/src/utils/dom';
 import { orderBy, getColumnById, getRowIdentity, getColumnByKey } from './util';
+import { getRandomId } from 'element-ui/src/utils/util';
 
 const sortData = (data, states) => {
   const sortingColumn = states.sortingColumn;
@@ -121,6 +122,12 @@ const TableStore = function(table, initialState = {}) {
 
 TableStore.prototype.mutations = {
   setData(states, data) {
+    for (let i = 0; i < data.length; i++) {
+      const d = data[i];
+      if (d._dataId === undefined) {
+        d._dataId = getRandomId();
+      }
+    }
     const dataInstanceChanged = states._data !== data;
     states._data = data;
 

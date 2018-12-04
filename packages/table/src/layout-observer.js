@@ -3,7 +3,8 @@ import {
   isEmptyObject
 } from 'element-ui/src/utils/util';
 import {
-  isSameColumns
+  isSameColumns,
+  isSameTableData
 } from './util';
 
 export default {
@@ -136,10 +137,10 @@ export default {
     updateColumnWidth(flattenColumns) {
       let tableData = this.table.store.states.data;
       let width = this.table.resizeState.width;
-      if (tableData === this.tableData && this.oldTablWidth === width && isSameColumns(this.tableColumns, flattenColumns)) {
+      if (isSameTableData(tableData, this.tableData) && this.oldTablWidth === width && isSameColumns(this.tableColumns, flattenColumns)) {
         return false;
       }
-      this.tableData = tableData;
+      this.tableData = [].concat(tableData);
       this.tableColumns = flattenColumns;
       this.oldTablWidth = width;
       let colWidthObj = {};
