@@ -16,7 +16,8 @@
       barStyle: {
         cache: false,
         get() {
-          if (!this.$parent.$refs.tabs) return {};
+          const tabs = this.tabs;
+          if (!tabs || !this.$parent.$refs.tabs) return {};
           let style = {};
           let offset = 0;
           let tabSize = 0;
@@ -25,8 +26,8 @@
           const firstUpperCase = str => {
             return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
           };
-          this.tabs.every((tab, index) => {
-            let $el = arrayFind(this.$parent.$refs.tabs, t => t.id.replace('tab-', '') === tab.name);
+          tabs.every((tab, index) => {
+            let $el = arrayFind(this.$parent.$refs.tabs, t => t.id.replace('tab-', '') === tab.paneName);
             if (!$el) { return false; }
 
             if (!tab.active) {
@@ -34,8 +35,8 @@
               return true;
             } else {
               tabSize = $el[`client${firstUpperCase(sizeName)}`];
-              if (sizeName === 'width' && this.tabs.length > 1) {
-                tabSize -= (index === 0 || index === this.tabs.length - 1) ? 20 : 40;
+              if (sizeName === 'width' && tabs.length > 1) {
+                tabSize -= (index === 0 || index === tabs.length - 1) ? 20 : 40;
               }
               return false;
             }
