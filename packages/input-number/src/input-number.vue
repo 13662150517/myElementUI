@@ -131,6 +131,15 @@
           this.userInput = null;
           this.$emit('input', newVal);
         }
+      },
+
+      precision() {
+        const displayValue = this.displayValue;
+        let value = Number(displayValue);
+        if (value === this.value) {
+          return;
+        }
+        this.$emit('input', value);
       }
     },
     computed: {
