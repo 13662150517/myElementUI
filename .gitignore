@@ -4,9 +4,8 @@ npm-debug.log
 lerna-debug.log
 npm-debug.log.*
 lerna-debug.log.*
-lib/**
+lib
 !/lib/index.js
-!/lib/theme-chalk
 !/lib/theme-chalk/index.css
 .idea
 .vscode
