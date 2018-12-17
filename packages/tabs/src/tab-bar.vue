@@ -14,7 +14,6 @@
 
     computed: {
       barStyle: {
-        cache: false,
         get() {
           const tabs = this.tabs;
           if (!tabs || !this.$parent.$refs.tabs) return {};
