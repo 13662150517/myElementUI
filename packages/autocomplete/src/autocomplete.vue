@@ -50,10 +50,15 @@
         role="option"
         :aria-selected="highlightedIndex === index"
       >
-        <suggestion-item :item="item" :value-key="valueKey" :show-overflow-tooltip="showOverflowTooltip">
+        <suggestion-item v-if="showOverflowTooltip" :item="item" :value-key="valueKey">
           <slot :item="item">
           </slot>
         </suggestion-item>
+        <template v-else>
+          <slot :item="item">
+            {{ item[valueKey] }}
+          </slot>
+        </template>
       </li>
     </el-autocomplete-suggestions>
   </div>

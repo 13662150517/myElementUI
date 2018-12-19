@@ -5,7 +5,7 @@
         {{ item[valueKey] }}
       </slot>
     </div>
-    <el-popover v-if="showOverflowTooltip" v-model="showPopover" ref="itemDetail" placement="right" trigger="manual">
+    <el-popover v-model="showPopover" ref="itemDetail" placement="right" trigger="manual">
       <span v-html="content"></span>
     </el-popover>
   </div>
@@ -25,9 +25,7 @@
       valueKey: {
         type: String,
         default: 'value'
-      },
-
-      showOverflowTooltip: Boolean
+      }
     },
 
     data() {
@@ -39,9 +37,6 @@
 
     methods: {
       toShowPopover() {
-        if (!this.showOverflowTooltip) {
-          return;
-        }
         const contentEl = this.$el.querySelector('.el-suggestion-item__text');
         const range = document.createRange();
         range.setStart(contentEl, 0);
@@ -57,9 +52,6 @@
       },
 
       toHidePopover() {
-        if (!this.showOverflowTooltip) {
-          return;
-        }
         this.showPopover = false;
       }
     },
