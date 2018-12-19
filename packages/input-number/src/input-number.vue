@@ -133,13 +133,8 @@
         }
       },
 
-      precision() {
-        const displayValue = this.displayValue;
-        let value = Number(displayValue);
-        if (value === this.value) {
-          return;
-        }
-        this.$emit('input', value);
+      precision(precision) {
+        this.setCurrentValue(this.value, precision);
       }
     },
     computed: {
@@ -241,10 +236,10 @@
       handleFocus(event) {
         this.$emit('focus', event);
       },
-      setCurrentValue(newVal) {
+      setCurrentValue(newVal, precision = this.precision) {
         const oldVal = this.currentValue;
-        if (typeof newVal === 'number' && this.precision !== undefined) {
-          newVal = this.toPrecision(newVal, this.precision);
+        if (typeof newVal === 'number' && precision !== undefined) {
+          newVal = this.toPrecision(newVal, precision);
         }
         if (newVal >= this.max) newVal = this.max;
         if (newVal <= this.min) newVal = this.min;

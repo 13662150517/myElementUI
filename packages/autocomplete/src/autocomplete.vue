@@ -50,9 +50,10 @@
         role="option"
         :aria-selected="highlightedIndex === index"
       >
-        <slot :item="item">
-          {{ item[valueKey] }}
-        </slot>
+        <suggestion-item :item="item" :value-key="valueKey" :show-overflow-tooltip="showOverflowTooltip">
+          <slot :item="item">
+          </slot>
+        </suggestion-item>
       </li>
     </el-autocomplete-suggestions>
   </div>
@@ -61,7 +62,8 @@
   import debounce from 'throttle-debounce/debounce';
   import ElInput from 'element-ui/packages/input';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
-  import ElAutocompleteSuggestions from './autocomplete-suggestions.vue';
+  import ElAutocompleteSuggestions from './autocomplete-suggestions';
+  import SuggestionItem from './suggestion-item';
   import Emitter from 'element-ui/src/mixins/emitter';
   import Migrating from 'element-ui/src/mixins/migrating';
   import { generateId } from 'element-ui/src/utils/util';
@@ -78,7 +80,8 @@
 
     components: {
       ElInput,
-      ElAutocompleteSuggestions
+      ElAutocompleteSuggestions,
+      SuggestionItem
     },
 
     directives: { Clickoutside },
@@ -127,7 +130,8 @@
       popperAppendToBody: {
         type: Boolean,
         default: true
-      }
+      },
+      showOverflowTooltip: Boolean
     },
     data() {
       return {

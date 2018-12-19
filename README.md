@@ -5,6 +5,8 @@
 
 2.新增`clearSuggestions`方法，用于清除建议。
 
+3.新增`show-overflow-tooltip`属性，数据类型`boolean`，默认值`false`，为`true`时，下拉选择项的内容过长被隐藏时显示 tooltip。
+
 ## checkbox
 1.选中状态会根据checked属性的改变而改变。
 
