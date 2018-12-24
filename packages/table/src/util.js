@@ -49,11 +49,44 @@ export const orderBy = function(array, sortKey, reverse, sortMethod, sortBy) {
       return sortMethod(a.value, b.value);
     }
     for (let i = 0, len = a.key.length; i < len; i++) {
-      if (a.key[i] < b.key[i]) {
-        return -1;
+      let valueA = a.key[i];
+      let valueB = b.key[i];
+      if (typeof valueA === 'string') {
+        valueA = valueA.trim();
       }
-      if (a.key[i] > b.key[i]) {
-        return 1;
+      if (typeof valueB === 'string') {
+        valueB = valueB.trim();
+      }
+      if (valueA === undefined || valueA === '') {
+        valueA = null;
+      }
+      if (valueB === undefined || valueB === '') {
+        valueB = null;
+      }
+      if (valueA === null || valueB === null) {
+        if (valueA === valueB) {
+          continue;
+        }
+        if (valueA === null) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        const flag = valueA.localeCompare(valueB);
+        if (flag === 0) {
+          continue;
+        }
+        return flag;
+      } else {
+        if (valueA < valueB) {
+          return -1;
+        }
+        if (valueA > valueB) {
+          return 1;
+        }
       }
     }
     return 0;
@@ -133,13 +166,11 @@ export const isSameTableData = (data1, data2) => {
     return false;
   }
 
-  data1 = [].concat(data1);
-  data1.sort();
   data1 = data1.map(d => d._dataId);
+  data1.sort();
   data1 = data1.join(',');
-  data2 = [].concat(data2);
-  data2.sort();
   data2 = data2.map(d => d._dataId);
+  data2.sort();
   data2 = data2.join(',');
   return data1 === data2;
 };

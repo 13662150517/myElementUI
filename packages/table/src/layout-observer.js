@@ -87,7 +87,6 @@ export default {
     },
 
     onBodyColumnsChange(vm, observers) {
-      const flattenColumns = this.tableLayout.getFlattenColumns();
       if (!this.tableLayout.autoWidth) {
         this.onColumnsChange(vm);
         return;
@@ -100,9 +99,14 @@ export default {
       if ($(this.$el).find('colgroup > col').length === 0) {
         return;
       }
-      this.updateColumnWidth(flattenColumns);
+
+      const flattenColumns = this.tableLayout.getFlattenColumns();
+      const flag1 = this.updateColumnWidth(flattenColumns);
       let colWidthObj = this.colWidthObj;
-      this.calColumnWidth(flattenColumns, colWidthObj);
+      const flag2 = this.calColumnWidth(flattenColumns, colWidthObj);
+      if (!flag1 && !flag2) {
+        return;
+      }
       this.tableLayout.colWidthObj = colWidthObj;
 
       const columnsMap = {};
@@ -179,7 +183,7 @@ export default {
     calColumnWidth(flattenColumns, colWidthObj) {
       let flexColumns = flattenColumns.filter((column) => typeof column.width !== 'number');
       if (flexColumns.length === 0) {
-        return;
+        return false;
       }
 
       const bodyWidth = this.table.$el.clientWidth;
@@ -193,7 +197,7 @@ export default {
       const scrollYWidth = tableLayout.scrollY ? tableLayout.gutterWidth : 0;
       const totalFlexWidth = bodyWidth - scrollYWidth - bodyMinWidth;
       if (totalFlexWidth <= 0) {
-        return;
+        return false;
       }
 
       if (flexColumns.length === 1) {
@@ -217,6 +221,7 @@ export default {
 
         colWidthObj[flexColumns[0].id] = this.getRealColumnWidth(colWidthObj, flexColumns[0]) + totalFlexWidth - noneFirstWidth;
       }
+      return true;
     },
 
     getRealColumnWidth(colWidthObj, column) {
