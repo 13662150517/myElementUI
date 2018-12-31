@@ -27,7 +27,7 @@
 
 2.新增`hide-column-keys`属性(string类型数组)，默认值为`null`，用于隐藏对应的列，根据每列设置的`column-key`值和该数组里的元素来隐藏相应的列(需要隐藏的列必需设置`column-key`)。
 
-## table-item
+### table-item
 1.新增`auto-width`属性，数据类型`boolean`，默认值`false`，为`true`时，该列宽度根据该列的内容进行自适应，最小宽度为 min-width 配置。
 
 2.新增`hidden`属性，数据类型`boolean`，默认值`false`，通过该属性来判断是否显示该列(`true`不显示该列，`false`显示该列)。
