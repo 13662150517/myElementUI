@@ -2,7 +2,7 @@
   "name": "element-ui",
   "version": "2.4.11",
   "description": "A Component Library for Vue.js.",
-  "main": "lib/element-ui.common.js",
+  "main": "lib/index.js",
   "files": [
     "lib",
     "src",
