@@ -7,7 +7,7 @@ lerna-debug.log.*
 lib
 !/lib/index.js
 !/lib/theme-chalk/index.css
-!/lib/theme-chalk/fonts/*
+!/lib/theme-chalk/fonts/element-icons.*
 .idea
 .vscode
 examples/element-ui
