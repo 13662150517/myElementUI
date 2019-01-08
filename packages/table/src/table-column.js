@@ -252,9 +252,14 @@ export default {
 
     let isColumnGroup = false;
 
+    let columnKey = this.columnKey;
+    if (columnKey === undefined) {
+      columnKey = this.prop || this.property;
+    }
+
     let column = getDefaultColumn(type, {
       id: this.columnId,
-      columnKey: this.columnKey,
+      columnKey: columnKey,
       label: this.label,
       className: this.className,
       labelClassName: this.labelClassName,
@@ -472,7 +477,7 @@ export default {
     const owner = this.owner;
     const hideColumnKeys = owner.hideColumnKeys;
     if (hideColumnKeys) {
-      if (hideColumnKeys.indexOf(this.columnKey) !== -1) {
+      if (hideColumnKeys.indexOf(this.columnConfig.columnKey) !== -1) {
         this.columnConfig.hidden = true;
       } else {
         this.columnConfig.hidden = false;
