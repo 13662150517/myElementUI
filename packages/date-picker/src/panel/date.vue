@@ -158,7 +158,8 @@
     nextMonth,
     changeYearMonthAndClampDate,
     extractDateFormat,
-    extractTimeFormat
+    extractTimeFormat,
+    timeWithinRange
   } from '../util';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
   import Locale from 'element-ui/src/mixins/locale';
@@ -222,13 +223,16 @@
         const format = timeFormat => {this.$refs.timepicker.format = timeFormat;};
         const value = value => {this.$refs.timepicker.value = value;};
         const date = date => {this.$refs.timepicker.date = date;};
+        const selectableRange = selectableRange => {this.$refs.timepicker.selectableRange = selectableRange;};
 
         this.$watch('value', value);
         this.$watch('date', date);
+        this.$watch('selectableRange', selectableRange);
 
         format(this.timeFormat);
         value(this.value);
         date(this.date);
+        selectableRange(this.selectableRange);
       },
 
       handleClear() {
@@ -333,9 +337,14 @@
 
       handleDatePick(value) {
         if (this.selectionMode === 'day') {
-          this.date = this.value
+          let newDate = this.value
             ? modifyDate(this.value, value.getFullYear(), value.getMonth(), value.getDate())
             : modifyWithTimeString(value, this.defaultTime);
+          // change default time while out of selectableRange
+          if (!this.checkDateWithinRange(newDate)) {
+            newDate = modifyDate(this.selectableRange[0][0], value.getFullYear(), value.getMonth(), value.getDate());
+          }
+          this.date = newDate;
           this.emit(this.date, this.showTime);
         } else if (this.selectionMode === 'week') {
           this.emit(value.date);

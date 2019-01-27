@@ -221,10 +221,10 @@
 
     methods: {
       focus() {
-        (this.$refs.input || this.$refs.textarea).focus();
+        this.getInput().focus();
       },
       blur() {
-        (this.$refs.input || this.$refs.textarea).blur();
+        this.getInput().blur();
       },
       getMigratingConfig() {
         return {
@@ -245,7 +245,7 @@
         }
       },
       select() {
-        (this.$refs.input || this.$refs.textarea).select();
+        this.getInput().select();
       },
       resizeTextarea() {
         if (this.$isServer) return;
@@ -287,12 +287,8 @@
         // set input's value, in case parent refuses the change
         // see: https://github.com/ElemeFE/element/issues/12850
         this.$nextTick(() => {
-          const type = this.type;
-          if (type !== 'textarea') {
-            this.$refs.input.value = this.value;
-          } else {
-            this.$refs.textarea.value = this.value;
-          }
+          let input = this.getInput();
+          input.value = this.value;
         });
       },
       handleChange(event) {
@@ -329,6 +325,9 @@
         this.$emit('input', '');
         this.$emit('change', '');
         this.$emit('clear');
+      },
+      getInput() {
+        return this.$refs.input || this.$refs.textarea;
       }
     },
 

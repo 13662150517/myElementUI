@@ -162,7 +162,10 @@
     },
     watch: {
       suggestionVisible(val) {
-        this.broadcast('ElAutocompleteSuggestions', 'visible', [val, this.$refs.input.$refs.input.offsetWidth]);
+        var $input = this.getInput();
+        if ($input) {
+          this.broadcast('ElAutocompleteSuggestions', 'visible', [val, $input.offsetWidth]);
+        }
       },
       activated(val) {
         if (!val) {
@@ -291,11 +294,15 @@
           suggestion.scrollTop -= highlightItem.scrollHeight;
         }
         this.highlightedIndex = index;
-        this.$el.querySelector('.el-input__inner').setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`);
+        var $input = this.getInput();
+        $input.setAttribute('aria-activedescendant', `${this.id}-item-${this.highlightedIndex}`);
       },
       clearSuggestions() {
         this.suggestions = [];
         this.highlightedIndex = -1;
+      },
+      getInput() {
+        return this.$refs.input.getInput();
       }
     },
     mounted() {
