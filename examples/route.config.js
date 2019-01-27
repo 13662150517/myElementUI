@@ -1,5 +1,5 @@
-import navConfig from './nav.config.json';
-import langs from './i18n/route.json';
+import navConfig from './nav.config';
+import langs from './i18n/route';
 
 const LOAD_MAP = {
   'zh-CN': name => {
@@ -120,7 +120,13 @@ route.push({
   component: require('./play/index.vue')
 });
 
-let defaultPath = '/zh-CN';
+let userLanguage = localStorage.getItem('ELEMENT_LANGUAGE') || window.navigator.language || 'en-US';
+let defaultPath = '/en-US';
+if (userLanguage.indexOf('zh-') !== -1) {
+  defaultPath = '/zh-CN';
+} else if (userLanguage.indexOf('es') !== -1) {
+  defaultPath = '/es';
+}
 
 route = route.concat([{
   path: '/',

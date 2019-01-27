@@ -4,11 +4,11 @@ import VueRouter from 'vue-router';
 import Element from 'main/index.js';
 import 'packages/theme-chalk/src/index.scss';
 import routes from './route.config';
-import demoBlock from './components/demo-block.vue';
-import MainHeader from './components/header.vue';
+import demoBlock from './components/demo-block';
+import MainHeader from './components/header';
 import SideNav from './components/side-nav';
 import FooterNav from './components/footer-nav';
-import title from './i18n/title.json';
+import title from './i18n/title';
 
 Vue.use(Element);
 Vue.use(VueRouter);
@@ -35,6 +35,6 @@ router.afterEach(route => {
 });
 
 new Vue({ // eslint-disable-line
-  render: h => h(entry),
+  ...entry,
   router
 }).$mount('#app');

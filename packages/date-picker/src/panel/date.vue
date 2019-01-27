@@ -368,7 +368,7 @@
       changeToNow() {
         // NOTE: not a permanent solution
         //       consider disable "now" button in the future
-        if (!this.disabledDate || !this.disabledDate(new Date())) {
+        if ((!this.disabledDate || !this.disabledDate(new Date())) && this.checkDateWithinRange(new Date())) {
           this.date = new Date();
           this.emit(this.date);
         }
@@ -455,7 +455,7 @@
 
       handleVisibleTimeChange(value) {
         const time = parseDate(value, this.timeFormat);
-        if (time) {
+        if (time && this.checkDateWithinRange(time)) {
           this.date = modifyDate(time, this.year, this.month, this.monthDate);
           this.userInputTime = null;
           this.$refs.timepicker.value = this.date;
@@ -482,13 +482,19 @@
           typeof this.disabledDate === 'function'
             ? !this.disabledDate(value)
             : true
-        );
+        ) && this.checkDateWithinRange(value);
       },
 
       getDefaultValue() {
         // if default-value is set, return it
         // otherwise, return now (the moment this method gets called)
         return this.defaultValue ? new Date(this.defaultValue) : new Date();
+      },
+
+      checkDateWithinRange(date) {
+        return this.selectableRange.length > 0
+          ? timeWithinRange(date, this.selectableRange, this.format || 'HH:mm:ss')
+          : true;
       }
     },
 
@@ -509,6 +515,7 @@
         visible: false,
         currentView: 'date',
         disabledDate: '',
+        selectableRange: [],
         firstDayOfWeek: 7,
         showWeekNumber: false,
         timePickerVisible: false,

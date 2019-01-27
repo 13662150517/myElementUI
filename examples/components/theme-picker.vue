@@ -5,7 +5,7 @@
     v-model="theme"></el-color-picker>
 </template>
 
-<style lang="postcss">
+<style>
   .theme-picker {
     height: 80px;
     display: inline-block;
@@ -22,7 +22,8 @@
 </style>
 
 <script>
-  import { version } from 'main/index.js';
+  import Element from 'main/index.js';
+  const { version } = Element;
 
   const ORIGINAL_THEME = '#409EFF';
   export default {
