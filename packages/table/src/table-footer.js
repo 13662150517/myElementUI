@@ -7,10 +7,11 @@ export default {
 
   render(h) {
     let sums = [];
+    let columns = this.columns;
     if (this.summaryMethod) {
-      sums = this.summaryMethod({ columns: this.columns, data: this.store.states.data });
+      sums = this.summaryMethod({ columns: columns, data: this.store.states.data });
     } else {
-      this.columns.forEach((column, index) => {
+      columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = this.sumText;
           return;
@@ -41,6 +42,42 @@ export default {
       });
     }
 
+    let sumList = [];
+    for (let i = 0; i < columns.length; i++) {
+      let sum = sums[i];
+      if (sum === undefined) {
+        continue;
+      }
+      let column = columns[i];
+      let span = column.colSpan;
+      let align = column.headerAlign;
+      let sumObj = [];
+      if (typeof sum === 'object') {
+        let value;
+        if (sum === null) {
+          value = '';
+        } else {
+          span = sum.span ? sum.span : span;
+          align = sum.align ? 'is-' + sum.align : align;
+          value = sum.value;
+        }
+        sumObj = {
+          span,
+          column,
+          align,
+          value: value
+        };
+      } else {
+        sumObj = {
+          span,
+          column,
+          align,
+          value: sum
+        };
+      }
+      sumList.push(sumObj);
+    }
+
     return (
       <table
         class="el-table__footer"
@@ -58,18 +95,22 @@ export default {
         <tbody class={ [{ 'has-gutter': this.hasGutter }] }>
           <tr>
             {
-              this._l(this.columns, (column, cellIndex) =>
-                <td
-                  colspan={ column.colSpan }
-                  rowspan={ column.rowSpan }
-                  class={ [column.id, column.headerAlign, column.className || '', this.isCellHidden(cellIndex, this.columns, column) ? 'is-hidden' : '', !column.children ? 'is-leaf' : '', column.labelClassName] }>
-                  <div class={ ['cell', column.labelClassName] }>
-                    {
-                      sums[cellIndex]
-                    }
-                  </div>
-                </td>
-              )
+              this._l(sumList, (sum, cellIndex) => {
+                let span = sum.span;
+                if (!span || span < 1) {
+                  return '';
+                }
+                let column = sum.column;
+                return (
+                  <td
+                    colspan= { span }
+                    class={ [column.id, sum.align, column.className || '', this.isCellHidden(cellIndex, this.columns, column) ? 'is-hidden' : '', !column.children ? 'is-leaf' : '', column.labelClassName] }>
+                    <div class={ ['cell', column.labelClassName] }>
+                      { sum.value }
+                    </div>
+                  </td>
+                );
+              })
             }
             {
               this.hasGutter ? <th class="gutter"></th> : ''
