@@ -30,7 +30,13 @@
     margin: 35px auto 110px;
 
     .container {
-      @utils-clearfix;
+      &::before, &::after {
+        display: table;
+        content: "";
+      }
+      &::after {
+        clear: both;
+      }
       padding: 0;
       margin: 0 -11px;
       width: auto;
@@ -80,7 +86,7 @@
       color: #99a9bf;
       padding: 0 30px;
       margin: 0;
-      work-break: break-all;
+      word-break: break-all;
       line-height: <%= paraHeight >;
     }
     a {
@@ -136,7 +142,7 @@
             <img src="~examples/assets/images/Axure-Components.svg" alt="">
             <h3><%= 3 ></h3>
             <p><%= 4 ></p>
-            <a href="https://github.com/ElementUI/Resources/raw/master/Element_Components_v1.1.0.rplib"><%= 5 ></a>
+            <a href="https://github.com/ElementUI/Resources/raw/master/Element_Components_v2.0.0.rplib"><%= 5 ></a>
           </div>
         </li>
         <li>

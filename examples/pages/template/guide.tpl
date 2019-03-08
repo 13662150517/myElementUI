@@ -1,6 +1,6 @@
 <style>
   .page-guide {
-    padding: 55px 30px 0;
+    padding: 55px 30px 95px;
     box-sizing: border-box;
 
     .content {
@@ -35,7 +35,7 @@
           content: '';
           display: inline-block;
           width: 4px;
-          height: 42px;
+          height: 4px;
           border-radius: 50%;
           vertical-align: middle;
           background-color: #5e6d82;

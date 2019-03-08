@@ -20,10 +20,6 @@
       border-bottom: 1px solid #DCDFE6;
     }
 
-    .nav-lang-spe {
-      color: #888;
-    }
-
     h1 {
       margin: 0;
       float: left;
@@ -55,9 +51,15 @@
       height: 100%;
       line-height: 80px;
       background: transparent;
-      @utils-clearfix;
       padding: 0;
       margin: 0;
+      &::before, &::after {
+        display: table;
+        content: "";
+      }
+      &::after {
+        clear: both;
+      }
     }
 
     .nav-gap {
@@ -96,28 +98,12 @@
         cursor: default;
       }
     
-      &.lang-item,
       &:last-child {
         cursor: default;
         margin-left: 34px;
 
         span {
           opacity: .8;
-        }
-
-        .nav-lang {
-          cursor: pointer;
-          display: inline-block;
-          height: 100%;
-          color: #888;
-
-          &:hover {
-            color: #409EFF;
-          }
-          &.active {
-             font-weight: bold;
-             color: #409EFF;
-           }
         }
       }
 
@@ -205,7 +191,6 @@
       .nav-item {
         margin-left: 6px;
 
-        &.lang-item,
         &:last-child {
           margin-left: 10px;
         }
@@ -229,19 +214,6 @@
         a {
           font-size: 12px;
           vertical-align: top;
-        }
-
-        &.lang-item {
-          height: 100%;
-         
-          .nav-lang {
-            display: flex;
-            align-items: center;
-            
-            span {
-              padding-bottom: 0;
-            }
-          }
         }
       }
       .nav-dropdown {
@@ -331,34 +303,10 @@
               </el-dropdown-menu>
             </el-dropdown>
           </li>
-
-          <!-- 语言选择器 -->
-          <li class="nav-item lang-item">
-            <el-dropdown
-              trigger="click"
-              class="nav-dropdown nav-lang"
-              :class="{ 'is-active': langDropdownVisible }">
-              <span>
-                {{ displayedLang }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu
-                slot="dropdown"
-                class="nav-dropdown-list"
-                @input="handleLangDropdownToggle">
-                <el-dropdown-item
-                  v-for="(value, key) in langs"
-                  :key="key"
-                  @click.native="switchLang(key)">
-                  {{ value }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </li>
           
           <!--theme picker-->
           <li class="nav-item nav-theme-switch" v-show="isComponentPage">
-            <theme-configurator :key="lang" v-if="showThemeConfigurator"></theme-configurator>
+            <theme-configurator v-if="showThemeConfigurator"></theme-configurator>
             <theme-picker v-else></theme-picker>
           </li>
         </ul>
@@ -382,14 +330,7 @@
         active: '',
         versions: [],
         version,
-        verDropdownVisible: true,
-        langDropdownVisible: true,
-        langs: {
-          'zh-CN': '中文',
-          'en-US': 'English',
-          'es': 'Español',
-          'fr-FR': 'Français'
-        }
+        verDropdownVisible: true
       };
     },
 
@@ -401,13 +342,10 @@
 
     computed: {
       lang() {
-        return this.$route.path.split('/')[1] || 'zh-CN';
-      },
-      displayedLang() {
-        return this.langs[this.lang] || '中文';
+        return 'zh-CN';
       },
       langConfig() {
-        return compoLang.filter(config => config.lang === this.lang)[0]['header'];
+        return compoLang[0]['header'];
       },
       isComponentPage() {
         return /^component/.test(this.$route.name);
@@ -424,18 +362,8 @@
         location.href = `${ location.origin }/${ this.versions[version] }/${ location.hash } `;
       },
 
-      switchLang(targetLang) {
-        if (this.lang === targetLang) return;
-        localStorage.setItem('ELEMENT_LANGUAGE', targetLang);
-        this.$router.push(this.$route.path.replace(this.lang, targetLang));
-      },
-
       handleVerDropdownToggle(visible) {
         this.verDropdownVisible = visible;
-      },
-
-      handleLangDropdownToggle(visible) {
-        this.langDropdownVisible = visible;
       }
     },
 
