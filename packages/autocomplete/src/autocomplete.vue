@@ -136,6 +136,10 @@
         type: Boolean,
         default: true
       },
+      highlightFirstItem: {
+        type: Boolean,
+        default: false
+      },
       showOverflowTooltip: Boolean
     },
     data() {
@@ -205,6 +209,7 @@
           }
           if (Array.isArray(suggestions)) {
             this.suggestions = suggestions;
+            this.highlightedIndex = this.highlightFirstItem ? 0 : -1;
           } else {
             console.error('[Element Error][Autocomplete]autocomplete suggestions must be an array');
           }

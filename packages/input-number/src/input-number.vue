@@ -188,7 +188,7 @@
     methods: {
       toPrecision(num, precision) {
         if (precision === undefined) precision = this.numPrecision;
-        return parseFloat(parseFloat(Number(num).toFixed(precision)));
+        return parseFloat(Number(num).toFixed(precision));
       },
       getPrecision(value) {
         if (value === undefined) return 0;
