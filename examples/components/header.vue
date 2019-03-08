@@ -17,6 +17,7 @@
     .container {
       height: 100%;
       box-sizing: border-box;
+      border-bottom: 1px solid #DCDFE6;
     }
 
     .nav-lang-spe {
@@ -105,9 +106,10 @@
         }
 
         .nav-lang {
+          cursor: pointer;
           display: inline-block;
           height: 100%;
-          color: #409eff;
+          color: #888;
 
           &:hover {
             color: #409EFF;
@@ -121,23 +123,24 @@
 
       a {
         text-decoration: none;
-        color: #888;
+        color: #1989FA;
+        opacity: 0.5;
         display: block;
         padding: 0 22px;
 
         &.active,
         &:hover {
-          color: #333;
+          opacity: 1;
         }
 
         &.active::after {
           content: '';
           display: inline-block;
           position: absolute;
-          bottom: 15px;
-          left: calc(50% - 7px);
-          width: 14px;
-          height: 4px;
+          bottom: 0;
+          left: calc(50% - 15px);
+          width: 30px;
+          height: 2px;
           background: #409EFF;
         }
       }
@@ -261,6 +264,7 @@
     <header class="header" ref="header">
       <div class="container">
         <h1><router-link :to="`/${ lang }`">
+          <!-- logo -->
           <slot>
             <img
               src="../assets/images/element-logo.svg"
@@ -271,7 +275,9 @@
               alt="element-logo"
               class="nav-logo-small">
           </slot>
+
         </router-link></h1>
+
         <!-- nav -->
         <ul class="nav">
           <li class="nav-item nav-algolia-search" v-show="isComponentPage">
@@ -328,14 +334,32 @@
 
           <!-- 语言选择器 -->
           <li class="nav-item lang-item">
-            <div class="nav-lang">
-              <span>中文</span>
-            </div>
+            <el-dropdown
+              trigger="click"
+              class="nav-dropdown nav-lang"
+              :class="{ 'is-active': langDropdownVisible }">
+              <span>
+                {{ displayedLang }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu
+                slot="dropdown"
+                class="nav-dropdown-list"
+                @input="handleLangDropdownToggle">
+                <el-dropdown-item
+                  v-for="(value, key) in langs"
+                  :key="key"
+                  @click.native="switchLang(key)">
+                  {{ value }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </li>
           
           <!--theme picker-->
           <li class="nav-item nav-theme-switch" v-show="isComponentPage">
-            <theme-picker></theme-picker>
+            <theme-configurator :key="lang" v-if="showThemeConfigurator"></theme-configurator>
+            <theme-picker v-else></theme-picker>
           </li>
         </ul>
       </div>
@@ -344,9 +368,12 @@
 </template>
 <script>
   import ThemePicker from './theme-picker.vue';
+  import ThemeConfigurator from './theme-configurator';
   import AlgoliaSearch from './search.vue';
   import compoLang from '../i18n/component.json';
   import Element from 'main/index.js';
+  import bus from '../bus';
+
   const { version } = Element;
 
   export default {
@@ -356,19 +383,38 @@
         versions: [],
         version,
         verDropdownVisible: true,
-        langConfig: compoLang[0].header,
-        lang: 'zh-CN'
+        langDropdownVisible: true,
+        langs: {
+          'zh-CN': '中文',
+          'en-US': 'English',
+          'es': 'Español',
+          'fr-FR': 'Français'
+        }
       };
     },
 
     components: {
       ThemePicker,
+      ThemeConfigurator,
       AlgoliaSearch
     },
 
     computed: {
+      lang() {
+        return this.$route.path.split('/')[1] || 'zh-CN';
+      },
+      displayedLang() {
+        return this.langs[this.lang] || '中文';
+      },
+      langConfig() {
+        return compoLang.filter(config => config.lang === this.lang)[0]['header'];
+      },
       isComponentPage() {
         return /^component/.test(this.$route.name);
+      },
+      showThemeConfigurator() {
+        const host = location.hostname;
+        return host.match('localhost') || host.match('elenet');
       }
     },
 
@@ -378,8 +424,18 @@
         location.href = `${ location.origin }/${ this.versions[version] }/${ location.hash } `;
       },
 
+      switchLang(targetLang) {
+        if (this.lang === targetLang) return;
+        localStorage.setItem('ELEMENT_LANGUAGE', targetLang);
+        this.$router.push(this.$route.path.replace(this.lang, targetLang));
+      },
+
       handleVerDropdownToggle(visible) {
         this.verDropdownVisible = visible;
+      },
+
+      handleLangDropdownToggle(visible) {
+        this.langDropdownVisible = visible;
       }
     },
 
@@ -396,6 +452,17 @@
       };
       xhr.open('GET', '/versions.json');
       xhr.send();
+      let primaryLast = '#409EFF';
+      bus.$on('user-theme-config-update', (val) => {
+        let primaryColor = val.global['$--color-primary'];
+        if (!primaryColor) primaryColor = '#409EFF';
+        const base64svg = 'data:image/svg+xml;base64,';
+        const imgSet = document.querySelectorAll('h1 img');
+        imgSet.forEach((img) => {
+          img.src = `${base64svg}${window.btoa(window.atob(img.src.replace(base64svg, '')).replace(primaryLast, primaryColor))}`;
+        });
+        primaryLast = primaryColor;
+      });
     }
   };
 </script>

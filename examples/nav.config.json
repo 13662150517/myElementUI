@@ -52,6 +52,10 @@
               "title": "Typography 字体"
             },
             {
+              "path": "/border",
+              "title": "Border 边框"
+            },
+            {
               "path": "/icon",
               "title": "Icon 图标"
             },
