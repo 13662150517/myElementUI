@@ -79,9 +79,3 @@
     }
   };
 </script>
-
-<style>
-  @import 'highlight.js/styles/color-brewer.css';
-  @import 'assets/styles/common.css';
-  @import 'assets/styles/fonts/style.css';
-</style>
