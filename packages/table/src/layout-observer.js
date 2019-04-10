@@ -147,7 +147,7 @@ export default {
       this.tableData = [].concat(tableData);
       this.tableColumns = flattenColumns;
       this.oldTablWidth = width;
-      let colWidthObj = {};
+      let colWidthObj = this.colWidthObj;
       flattenColumns.forEach(column => {
         if (!column.autoWidth) {
           return;

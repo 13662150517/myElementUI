@@ -1,4 +1,4 @@
-.demo-block.demo-datetime-picker .source {
+.demo-block.demo-datetime-picker .source>div {
   padding: 0;
   display: flex;
 }
@@ -8,6 +8,7 @@
   text-align: center;
   border-right: solid 1px #eff2f6;
   flex: 1;
+
   &:last-child {
     border-right: none;
   }
