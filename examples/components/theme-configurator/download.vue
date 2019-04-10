@@ -8,6 +8,7 @@
       <el-button 
         type="primary" 
         :loading=downloading
+        style="background: #66b1ff;border-color: #66b1ff"
         @click.stop="onDownload">
         {{getActionDisplayName("download-theme")}}
       </el-button>
@@ -70,6 +71,7 @@ export default {
         .then(() => {
           this.downloading = false;
         });
+      ga('send', 'event', 'ThemeConfigurator', 'Download');
     }
   }
 };
