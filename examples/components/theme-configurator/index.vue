@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .configurator {
   height: 100%;
   width: 24%;

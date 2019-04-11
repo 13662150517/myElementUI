@@ -175,7 +175,7 @@
               <li
                 class="nav-item"
                 v-for="(navItem, key) in group.list"
-                v-if="!navItem.disabled"
+                v-show="!navItem.disabled"
                 :key="key">
                 <router-link
                   active-class="active"

@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="scss" scoped>
   .headerWrapper {
     height: 80px;
   }
@@ -160,7 +160,7 @@
       transform: translateY(-2px);
     }
 
-    @when active {
+   .is-active {
       span, i {
         color: #409EFF;
       }
@@ -303,7 +303,6 @@
               </el-dropdown-menu>
             </el-dropdown>
           </li>
-          
           <!--theme picker-->
           <li class="nav-item nav-theme-switch" v-show="isComponentPage">
             <theme-configurator v-if="showThemeConfigurator"></theme-configurator>
@@ -320,7 +319,7 @@
   import AlgoliaSearch from './search.vue';
   import compoLang from '../i18n/component.json';
   import Element from 'main/index.js';
-  import { getVars } from './theme-configurator/utils/api.js';
+  // import { getVars } from './theme-configurator/utils/api.js';
   import bus from '../bus';
 
   const { version } = Element;
@@ -354,17 +353,17 @@
       }
     },
     mounted() {
-      const host = location.hostname;
-      this.showThemeConfigurator = host.match('localhost') || host.match('elenet');
-      if (!this.showThemeConfigurator) {
-        getVars()
-          .then(() => {
-            this.showThemeConfigurator = true;
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
+      // const host = location.hostname;
+      // this.showThemeConfigurator = host.match('localhost') || host.match('elenet');
+      // if (!this.showThemeConfigurator) {
+      //   getVars()
+      //     .then(() => {
+      //       this.showThemeConfigurator = true;
+      //     })
+      //     .catch((err) => {
+      //       console.error(err);
+      //     });
+      // }
     },
     methods: {
       switchVersion(version) {

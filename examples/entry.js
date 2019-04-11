@@ -12,7 +12,7 @@ import title from './i18n/title';
 
 import 'packages/theme-chalk/src/index.scss';
 import './demo-styles/index.scss';
-import './assets/styles/common.css';
+import './assets/styles/common.scss';
 import './assets/styles/fonts/style.css';
 
 Vue.use(Element);
