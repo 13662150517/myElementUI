@@ -104,7 +104,7 @@ export default {
                 return (
                   <td
                     colspan= { span }
-                    class={ [column.id, sum.align, column.className || '', this.isCellHidden(cellIndex, this.columns, column) ? 'is-hidden' : '', !column.children ? 'is-leaf' : '', column.labelClassName] }>
+                    class={ this.getRowClasses(column, cellIndex) }>
                     <div class={ ['cell', column.labelClassName] }>
                       { sum.value }
                     </div>
@@ -183,6 +183,20 @@ export default {
       } else {
         return (index < this.leftFixedCount) || (index >= this.columnsCount - this.rightFixedCount);
       }
+    },
+
+    getRowClasses(column, cellIndex) {
+      const classes = [column.id, column.align, column.labelClassName];
+      if (column.className) {
+        classes.push(column.className);
+      }
+      if (this.isCellHidden(cellIndex, this.columns, column)) {
+        classes.push('is-hidden');
+      }
+      if (!column.children) {
+        classes.push('is-leaf');
+      }
+      return classes;
     }
   }
 };

@@ -35,6 +35,7 @@
       :class="[getScrollX() ? `is-scrolling-${scrollPosition}` : 'is-scrolling-none']"
       :style="[bodyHeight]">
       <table-body
+        ref="tableBody"
         :context="context"
         :store="store"
         :stripe="stripe"
@@ -224,6 +225,26 @@
   import TableBody from './table-body';
   import TableHeader from './table-header';
   import TableFooter from './table-footer';
+  import { getRowIdentity } from './util';
+
+  const flattenData = function(data) {
+    if (!data) return data;
+    let newData = [];
+    const flatten = arr => {
+      arr.forEach((item) => {
+        newData.push(item);
+        if (Array.isArray(item.children)) {
+          flatten(item.children);
+        }
+      });
+    };
+    flatten(data);
+    if (data.length === newData.length) {
+      return data;
+    } else {
+      return newData;
+    }
+  };
 
   let tableIdSeed = 1;
 
@@ -313,7 +334,16 @@
       selectOnIndeterminate: {
         type: Boolean,
         default: true
-      }
+      },
+
+      indent: {
+        type: Number,
+        default: 16
+      },
+
+      lazy: Boolean,
+
+      load: Function
     },
 
     components: {
@@ -525,6 +555,60 @@
 
       setTableBodyWidth(tableBodyWidth) {
         this.tableBodyWidth = tableBodyWidth;
+      },
+
+      getRowKey(row) {
+        const rowKey = getRowIdentity(row, this.store.states.rowKey);
+        if (!rowKey) {
+          throw new Error('if there\'s nested data, rowKey is required.');
+        }
+        return rowKey;
+      },
+
+      getTableTreeData(data) {
+        const treeData = {};
+        const traverse = (children, parentData, level) => {
+          children.forEach(item => {
+            const rowKey = this.getRowKey(item);
+            treeData[rowKey] = {
+              display: false,
+              level
+            };
+            parentData.children.push(rowKey);
+            if (Array.isArray(item.children) && item.children.length) {
+              treeData[rowKey].children = [];
+              treeData[rowKey].expanded = false;
+              traverse(item.children, treeData[rowKey], level + 1);
+            }
+          });
+        };
+        if (data) {
+          data.forEach(item => {
+            const containChildren = Array.isArray(item.children) && item.children.length;
+            if (!(containChildren || item.hasChildren)) return;
+            const rowKey = this.getRowKey(item);
+            const treeNode = {
+              level: 0,
+              expanded: false,
+              display: true,
+              children: []
+            };
+            if (containChildren) {
+              treeData[rowKey] = treeNode;
+              traverse(item.children, treeData[rowKey], 1);
+            } else if (item.hasChildren && this.lazy) {
+              treeNode.hasChildren = true;
+              treeNode.loaded = false;
+              treeData[rowKey] = treeNode;
+            }
+          });
+        }
+        return treeData;
+      },
+
+      handleTreeExpandClick(node) {
+        this.$refs['tableBody'].tableData = [];
+        this.$emit('tree-expand-change', node);
       }
     },
 
@@ -679,6 +763,8 @@
       data: {
         immediate: true,
         handler(value) {
+          this.store.states.treeData = this.getTableTreeData(value);
+          value = flattenData(value);
           this.store.commit('setData', value);
           if (this.$ready) {
             this.$nextTick(() => {
@@ -735,7 +821,9 @@
       const store = new TableStore(this, {
         rowKey: this.rowKey,
         defaultExpandAll: this.defaultExpandAll,
-        selectOnIndeterminate: this.selectOnIndeterminate
+        selectOnIndeterminate: this.selectOnIndeterminate,
+        indent: this.indent,
+        lazy: this.lazy
       });
       const layout = new TableLayout({
         store,
