@@ -1,6 +1,7 @@
 <template>
   <div style="margin: 20px;">
-    <el-input v-model="input" placeholder="请输入内容" show-password></el-input>
+    {{color1}}
+    <el-color-picker v-model="color1"></el-color-picker>
   </div>
 </template>
 
@@ -8,7 +9,7 @@
   export default {
     data() {
       return {
-        input: 'Hello Element UI!'
+        color1: '#409EFF'
       };
     }
   };
