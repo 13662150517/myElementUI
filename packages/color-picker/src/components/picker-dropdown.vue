@@ -106,6 +106,10 @@
             sl && sl.update();
             hue && hue.update();
             alpha && alpha.update();
+
+            if (this.customInput !== this.currentColor) {
+              this.customInput = this.currentColor;
+            }
           });
         }
       },
