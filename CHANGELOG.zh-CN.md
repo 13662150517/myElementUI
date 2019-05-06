@@ -4,12 +4,12 @@
 
 *2019-04-03*
 
-#### Bug fixes
+#### 修复
 
 - Form
   - 修复 `label-width` 为 `auto` 的样式 (#14955 by @ziyoung)
   
-#### Optimization
+#### 优化
 - Docs
   - 修复文档内图片链接错误 (#14957 by @iamkun)
 - Chore
@@ -33,7 +33,7 @@
   - `label-width` 支持自动宽度 (#14944 by @ziyoung)
   
 #### 优化
-- 文档
+- Docs
   - 更新西班牙语文档 (#14913 by @Gonzalo2310)
   - 新增组件自动生成法语文档 (#14924 by @ziyoung)
   - 更新 Tabs 文档 (#14938 by @ziyoung)
@@ -205,6 +205,10 @@
   - 修复 DatetimePicker 文档问题 (by @iamkun in #14290)
   - 修复 DatePicker 文档拼写问题 (by @helmut in #14481)
   - 修复分页组件文档样式问题 (by @liuchuzhang in #14451)
+
+#### 非兼容性更新
+- Table
+  - 修复 row 事件的参数顺序 (by @jikkai in #12086)
 
 ### 2.5.4
 
