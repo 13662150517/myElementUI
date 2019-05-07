@@ -134,7 +134,7 @@
       },
 
       precision(precision) {
-        this.setCurrentValue(this.value, precision);
+        this.setCurrentValue(this.value);
       }
     },
     computed: {
@@ -236,10 +236,10 @@
       handleFocus(event) {
         this.$emit('focus', event);
       },
-      setCurrentValue(newVal, precision = this.precision) {
+      setCurrentValue(newVal) {
         const oldVal = this.currentValue;
-        if (typeof newVal === 'number' && precision !== undefined) {
-          newVal = this.toPrecision(newVal, precision);
+        if (typeof newVal === 'number' && this.precision !== undefined) {
+          newVal = this.toPrecision(newVal, this.precision);
         }
         if (newVal >= this.max) newVal = this.max;
         if (newVal <= this.min) newVal = this.min;

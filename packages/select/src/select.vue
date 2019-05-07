@@ -281,6 +281,10 @@
       noDataText: String,
       remoteMethod: Function,
       filterMethod: Function,
+      emptyFilterText: {
+        type: Boolean,
+        default: false
+      },
       multiple: Boolean,
       multipleLimit: {
         type: Number,
@@ -394,6 +398,10 @@
               }
               if (this.filterable) this.query = this.selectedLabel;
             }
+            
+            if (this.filterable && this.emptyFilterText) {
+              this.currentPlaceholder = this.cachedPlaceHolder;
+            }
           }
         } else {
           this.broadcast('ElSelectDropdown', 'updatePopper');
@@ -407,7 +415,15 @@
                 this.broadcast('ElOption', 'queryChange', '');
                 this.broadcast('ElOptionGroup', 'queryChange');
               }
-              this.broadcast('ElInput', 'inputSelect');
+
+              if (this.emptyFilterText) {
+                if (this.selectedLabel) {
+                  this.currentPlaceholder = this.selectedLabel;
+                  this.selectedLabel = '';
+                }
+              } else {
+                this.broadcast('ElInput', 'inputSelect');
+              }
             }
           }
         }
