@@ -243,6 +243,10 @@
             {
               "path": "/timeline",
               "title": "Timeline 时间线"
+            },
+            {
+              "path": "/divider",
+              "title": "Divider 分割线"
             }
           ]
         }

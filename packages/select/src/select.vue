@@ -398,7 +398,7 @@
               }
               if (this.filterable) this.query = this.selectedLabel;
             }
-            
+
             if (this.filterable && this.emptyFilterText) {
               this.currentPlaceholder = this.cachedPlaceHolder;
             }
