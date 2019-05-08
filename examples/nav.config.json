@@ -247,6 +247,10 @@
             {
               "path": "/divider",
               "title": "Divider 分割线"
+            },
+            {
+              "path": "/image",
+              "title": "Image 图片"
             }
           ]
         }

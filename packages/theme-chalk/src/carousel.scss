@@ -2,8 +2,15 @@
 @import "common/var";
 
 @include b(carousel) {
-  overflow-x: hidden;
   position: relative;
+
+  @include m(horizontal) {
+    overflow-x: hidden;
+  }
+
+  @include m(vertical) {
+    overflow-y: hidden;
+  }
 
   @include e(container) {
     position: relative;
