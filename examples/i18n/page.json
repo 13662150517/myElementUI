@@ -17,6 +17,15 @@
         "paraSize": "18"
       },
       "component": {},
+      "theme": {
+        "1": "官方主题",
+        "2": "我的主题",
+        "3": "主题名称"
+      },
+      "theme-preview": {
+        "1": "返回"
+      },
+      "theme-nav": {},
       "changelog": {
         "1": "更新日志",
         "2": "zh-CN"

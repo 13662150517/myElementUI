@@ -22,6 +22,9 @@
 (1) boolean `true`改变为新的数值 `false` 还原为原来的数值<br>
 (2) number 数值改为返回的`number`类型数据
 
+## select
+1.新增`empty-filter-text`属性，在`filterable=true`时有效，如果为`true`时，输入框内有值，重新打开下拉框时会清空输入框的值，并且输入框input的placeholder属性变为之前选中的值，如为`false`，输入框内容不会清空，并且里面的所有内容为选中状态
+
 ## table
 1.`height`属性添加`parent`值录入，表格高度随父级节点的改变而改变。
 
