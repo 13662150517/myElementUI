@@ -253,6 +253,10 @@
               "title": "Divider 分割线"
             },
             {
+              "path": "/calendar",
+              "title": "Calendar 日历"
+            },
+            {
               "path": "/image",
               "title": "Image 图片"
             }

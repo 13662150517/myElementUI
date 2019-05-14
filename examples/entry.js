@@ -9,6 +9,8 @@ import MainHeader from './components/header';
 import SideNav from './components/side-nav';
 import FooterNav from './components/footer-nav';
 import title from './i18n/title';
+import icon from './icon.json';
+console.log('icon', icon);
 
 import 'packages/theme-chalk/src/index.scss';
 import './demo-styles/index.scss';
@@ -21,6 +23,8 @@ Vue.component('demo-block', demoBlock);
 Vue.component('main-header', MainHeader);
 Vue.component('side-nav', SideNav);
 Vue.component('footer-nav', FooterNav);
+
+Vue.prototype.$icon = icon; // Icon 列表页用
 
 const router = new VueRouter({
   mode: 'hash',
