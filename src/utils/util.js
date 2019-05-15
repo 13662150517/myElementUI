@@ -121,25 +121,6 @@ export const isEdge = function() {
   return !Vue.prototype.$isServer && navigator.userAgent.indexOf('Edge') > -1;
 };
 
-export const isEmptyObject = obj => {
-  for (let key in obj) {
-    return false;
-  }
-  return true;
-};
-
-export const getRandomId = () => {
-  var s = [];
-  var hexDigits = '0123456789abcdef';
-  for (var i = 0; i < 32; i++) {
-    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-  }
-  s[12] = '4';
-  s[16] = hexDigits.substr((s[16] & 0x3) | 0x8, 1);
-  var uuid = s.join('');
-  return uuid;
-};
-
 export const autoprefixer = function(style) {
   if (typeof style !== 'object') return style;
   const rules = ['transform', 'transition', 'animation'];
@@ -153,4 +134,12 @@ export const autoprefixer = function(style) {
     }
   });
   return style;
+};
+
+export const kebabCase = function(str) {
+  const hyphenateRE = /([^-])([A-Z])/g;
+  return str
+    .replace(hyphenateRE, '$1-$2')
+    .replace(hyphenateRE, '$1-$2')
+    .toLowerCase();
 };
