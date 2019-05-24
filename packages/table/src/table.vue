@@ -609,6 +609,13 @@
       handleTreeExpandClick(node) {
         this.$refs['tableBody'].tableData = [];
         this.$emit('tree-expand-change', node);
+      },
+
+      tableScrollTo(x, y) {
+        let bodyWrapper = this.$refs['bodyWrapper'];
+        if (bodyWrapper) {
+          bodyWrapper.scrollTo(0, 0);
+        }
       }
     },
 
@@ -767,6 +774,12 @@
           if (this.$ready) {
             this.$nextTick(() => {
               this.doLayout();
+              this.$nextTick(() => {
+                if (!this.layout.scrollY && !this.getScrollX()) {
+                  return;
+                }
+                this.tableScrollTo(0, 0);
+              });
             });
           }
         }
