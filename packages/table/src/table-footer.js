@@ -1,4 +1,5 @@
 import LayoutObserver from './layout-observer';
+import { mapStates } from './store/helper';
 
 export default {
   name: 'ElTableFooter',
@@ -7,11 +8,10 @@ export default {
 
   render(h) {
     let sums = [];
-    let columns = this.columns;
     if (this.summaryMethod) {
-      sums = this.summaryMethod({ columns: columns, data: this.store.states.data });
+      sums = this.summaryMethod({ columns: this.columns, data: this.store.states.data });
     } else {
-      columns.forEach((column, index) => {
+      this.columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = this.sumText;
           return;
@@ -43,6 +43,7 @@ export default {
     }
 
     let sumList = [];
+    let columns = this.columns;
     for (let i = 0; i < columns.length; i++) {
       let sum = sums[i];
       if (sum === undefined) {
@@ -86,7 +87,7 @@ export default {
         border="0">
         <colgroup>
           {
-            this._l(this.columns, column => <col name={ column.id } />)
+            this.columns.map(column => <col name={ column.id } key={column.id} />)
           }
           {
             this.hasGutter ? <col name="gutter" /> : ''
@@ -95,21 +96,23 @@ export default {
         <tbody class={ [{ 'has-gutter': this.hasGutter }] }>
           <tr>
             {
-              this._l(sumList, (sum, cellIndex) => {
+              sumList.map((sum, cellIndex) => {
                 let span = sum.span;
                 if (!span || span < 1) {
                   return '';
                 }
                 let column = sum.column;
-                return (
-                  <td
-                    colspan= { span }
-                    class={ this.getRowClasses(column, cellIndex) }>
-                    <div class={ ['cell', column.labelClassName] }>
-                      { sum.value }
-                    </div>
-                  </td>
-                );
+                return (<td
+                  key={cellIndex}
+                  colspan={ span }
+                  rowspan={ column.rowSpan }
+                  class={ this.getRowClasses(column, cellIndex) }>
+                  <div class={ ['cell', column.labelClassName] }>
+                    {
+                      sum.value
+                    }
+                  </div>
+                </td>);
               })
             }
             {
@@ -145,41 +148,33 @@ export default {
       return this.$parent;
     },
 
-    isAllSelected() {
-      return this.store.states.isAllSelected;
-    },
-
-    columnsCount() {
-      return this.store.states.columns.length;
-    },
-
-    leftFixedCount() {
-      return this.store.states.fixedColumns.length;
-    },
-
-    rightFixedCount() {
-      return this.store.states.rightFixedColumns.length;
-    },
-
-    columns() {
-      return this.store.states.columns;
-    },
-
     hasGutter() {
       return !this.fixed && this.tableLayout.gutterWidth;
-    }
+    },
+
+    ...mapStates({
+      columns: 'columns',
+      isAllSelected: 'isAllSelected',
+      leftFixedLeafCount: 'fixedLeafColumnsLength',
+      rightFixedLeafCount: 'rightFixedLeafColumnsLength',
+      columnsCount: states => states.columns.length,
+      leftFixedCount: states => states.fixedColumns.length,
+      rightFixedCount: states => states.rightFixedColumns.length
+    })
   },
 
   methods: {
-    isCellHidden(index, columns) {
+    isCellHidden(index, columns, column) {
       if (this.fixed === true || this.fixed === 'left') {
-        return index >= this.leftFixedCount;
+        return index >= this.leftFixedLeafCount;
       } else if (this.fixed === 'right') {
         let before = 0;
         for (let i = 0; i < index; i++) {
           before += columns[i].colSpan;
         }
-        return before < this.columnsCount - this.rightFixedCount;
+        return before < this.columnsCount - this.rightFixedLeafCount;
+      } else if (!this.fixed && column.fixed) { // hide cell when footer instance is not fixed and column is fixed
+        return true;
       } else {
         return (index < this.leftFixedCount) || (index >= this.columnsCount - this.rightFixedCount);
       }

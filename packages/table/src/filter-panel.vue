@@ -72,17 +72,6 @@
       }
     },
 
-    customRender(h) {
-      return (<div class="el-table-filter">
-        <div class="el-table-filter__content">
-        </div>
-        <div class="el-table-filter__bottom">
-          <button on-click={ this.handleConfirm }>{ this.t('el.table.confirmFilter') }</button>
-          <button on-click={ this.handleReset }>{ this.t('el.table.resetFilter') }</button>
-        </div>
-      </div>);
-    },
-
     methods: {
       isActive(filter) {
         return filter.value === this.filterValue;
@@ -95,19 +84,21 @@
       },
 
       handleConfirm() {
+        this.oldFilteredValue = this.filteredValue;
         this.confirmFilter(this.filteredValue);
         this.handleOutsideClick();
       },
 
       handleReset() {
         this.filteredValue = [];
+        this.oldFilteredValue = [];
         this.confirmFilter(this.filteredValue);
         this.handleOutsideClick();
       },
 
       handleSelect(filterValue) {
         this.filterValue = filterValue;
-
+        this.oldFilteredValue = filterValue;
         if ((typeof filterValue !== 'undefined') && (filterValue !== null)) {
           this.confirmFilter(this.filteredValue);
         } else {
@@ -127,7 +118,12 @@
     },
 
     data() {
+      let oldFilteredValue = [];
+      if (this.column) {
+        oldFilteredValue = this.column.filteredValue || [];
+      }
       return {
+        oldFilteredValue,
         table: null,
         cell: null,
         column: null
@@ -188,6 +184,9 @@
         if (value) {
           Dropdown.open(this);
         } else {
+          if (this.filteredValue !== this.oldFilteredValue) {
+            this.filteredValue = this.oldFilteredValue;
+          }
           Dropdown.close(this);
         }
       });

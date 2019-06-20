@@ -2,7 +2,6 @@ import Vue from 'vue';
 import debounce from 'throttle-debounce/debounce';
 import merge from 'element-ui/src/utils/merge';
 import { orderBy, getColumnById, getRowIdentity, getColumnByKey } from './util';
-import { getRandomId } from 'element-ui/src/utils/util';
 
 const sortData = (data, states) => {
   const sortingColumn = states.sortingColumn;
@@ -160,7 +159,6 @@ const TableStore = function(table, initialState = {}) {
       ? !states.isAllSelected
       : !(states.isAllSelected || selection.length);
     let selectionChanged = false;
-
     data.forEach((item, index) => {
       if (states.selectable) {
         if (states.selectable.call(null, item, index) && toggleRowSelection(states, item, value)) {
@@ -172,7 +170,6 @@ const TableStore = function(table, initialState = {}) {
         }
       }
     });
-
     const table = this.table;
     if (selectionChanged) {
       table.$emit('selection-change', selection ? selection.slice() : []);
@@ -190,12 +187,6 @@ const TableStore = function(table, initialState = {}) {
 
 TableStore.prototype.mutations = {
   setData(states, data) {
-    for (let i = 0; i < data.length; i++) {
-      const d = data[i];
-      if (d._dataId === undefined) {
-        d._dataId = getRandomId();
-      }
-    }
     const dataInstanceChanged = states._data !== data;
     states._data = data;
 
@@ -387,19 +378,6 @@ TableStore.prototype.mutations = {
     }
   },
 
-  updateHideColumns(states, hideKeys) {
-    const _columns = states._columns || [];
-    hideKeys = hideKeys || [];
-    _columns.forEach(column => {
-      const columnKey = column.columnKey;
-      column.hidden = hideKeys.indexOf(columnKey) !== -1;
-    });
-    if (this.table.$ready) {
-      this.updateColumns();
-      this.scheduleLayout();
-    }
-  },
-
   setHoverRow(states, row) {
     states.hoverRow = row;
   },
@@ -437,10 +415,6 @@ const doFlattenColumns = (columns) => {
     if (column.children) {
       result.push.apply(result, doFlattenColumns(column.children));
     } else {
-      const autoWidth = column.autoWidth;
-      if (autoWidth) {
-        column.resizable = false;
-      }
       result.push(column);
     }
   });
@@ -449,8 +423,7 @@ const doFlattenColumns = (columns) => {
 
 TableStore.prototype.updateColumns = function() {
   const states = this.states;
-  let _columns = states._columns || [];
-  _columns = _columns.filter((column) => !column.hidden);
+  const _columns = states._columns || [];
   states.fixedColumns = _columns.filter((column) => column.fixed === true || column.fixed === 'left');
   states.rightFixedColumns = _columns.filter((column) => column.fixed === 'right');
 
@@ -574,7 +547,6 @@ TableStore.prototype.clearFilter = function(columnKeys) {
   if (typeof columnKeys === 'string') {
     columnKeys = [columnKeys];
   }
-
   if (Array.isArray(columnKeys)) {
     const columns = columnKeys.map(key => getColumnByKey(states, key));
     keys.forEach(key => {
@@ -745,7 +717,6 @@ TableStore.prototype.toggleTreeExpansion = function(rowKey) {
     };
     traverse(node.children);
   }
-  this.table.handleTreeExpandClick(node);
 };
 
 TableStore.prototype.loadData = function(row, treeNode) {
