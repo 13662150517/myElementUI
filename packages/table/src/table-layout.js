@@ -58,7 +58,9 @@ class TableLayout {
   setHeight(value, prop = 'height') {
     if (Vue.prototype.$isServer) return;
     const el = this.table.$el;
-    value = parseHeight(value);
+    if (value !== 'parent') {
+      value = parseHeight(value);
+    }
     this.height = value;
 
     if (!el && (value || value === 0)) return Vue.nextTick(() => this.setHeight(value, prop));

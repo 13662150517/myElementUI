@@ -441,7 +441,10 @@
 
       unbindEvents() {
         this.bodyWrapper.removeEventListener('scroll', this.syncPostion, { passive: true });
-        if (this.fit) {
+        if (this.height === 'parent') {
+          removeResizeListener(this.$el, this.resizeListener);
+          removeResizeListener(this.$el.parentNode, this.heightResizeListener);
+        } else if (this.fit) {
           removeResizeListener(this.$el, this.resizeListener);
         }
       },

@@ -321,9 +321,8 @@ export default {
     const filterProps = ['filterMethod', 'filters', 'filterMultiple', 'filterOpened', 'filteredValue', 'filterPlacement'];
 
     let column = this.getPropsData(basicProps, sortProps, selectProps, filterProps);
-    let columnKey = this.columnKey;
-    if (columnKey === undefined) {
-      columnKey = this.prop || this.property;
+    if (this.columnKey === undefined) {
+      column.columnKey = this.prop || this.property;
     }
     column = mergeOptions(defaults, column);
 
