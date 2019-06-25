@@ -122,6 +122,11 @@ export default {
         this.owner.store.updateColumns();
         this.owner.store.scheduleLayout();
       }
+    },
+
+    filters() {
+      this.columnConfig.filterable = this.filters && this.filters.length;
+      this.columnConfig.filters = this.filters;
     }
   },
 
@@ -232,7 +237,7 @@ export default {
     },
 
     registerNormalWatchers() {
-      const props = ['label', 'property', 'filters', 'filterMultiple', 'sortable', 'index', 'formatter', 'className', 'labelClassName'];
+      const props = ['label', 'property', 'filterMultiple', 'sortable', 'index', 'formatter', 'className', 'labelClassName'];
       // 一些属性具有别名
       const aliases = {
         prop: 'property',
@@ -304,7 +309,7 @@ export default {
       headerAlign: this.realHeaderAlign,
       showOverflowTooltip: this.showOverflowTooltip || this.showTooltipWhenOverflow,
       // filter 相关属性
-      filterable: this.filters || this.filterMethod,
+      filterable: this.filters && this.filters.length,
       filteredValue: [],
       filterPlacement: '',
       isColumnGroup: false,
