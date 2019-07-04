@@ -1,7 +1,6 @@
 <template>
-  <div style="margin: 20px;">
-    <el-calendar v-model="value">
-    </el-calendar>
+  <div>
+    <el-input clearable v-model="value"></el-input>
   </div>
 </template>
 
@@ -9,11 +8,11 @@
   export default {
     data() {
       return {
-        value: new Date()
-      };
+        value: '1234'
+      }
     },
     methods: {
     }
-  };
+  }
 
 </script>
