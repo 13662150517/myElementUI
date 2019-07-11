@@ -10,7 +10,6 @@ import SideNav from './components/side-nav';
 import FooterNav from './components/footer-nav';
 import title from './i18n/title';
 import icon from './icon.json';
-console.log('icon', icon);
 
 import 'packages/theme-chalk/src/index.scss';
 import './demo-styles/index.scss';

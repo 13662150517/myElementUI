@@ -261,6 +261,10 @@
               "title": "Image 图片"
             },
             {
+              "path": "/backtop",
+              "title": "Backtop 回到顶部"
+            },
+            {
               "path": "/infiniteScroll",
               "title": "InfiniteScroll 无限滚动"
             }
