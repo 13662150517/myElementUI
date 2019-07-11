@@ -259,6 +259,10 @@
             {
               "path": "/image",
               "title": "Image 图片"
+            },
+            {
+              "path": "/infiniteScroll",
+              "title": "InfiniteScroll 无限滚动"
             }
           ]
         }
