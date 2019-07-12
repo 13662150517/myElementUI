@@ -357,7 +357,7 @@
       }
     },
     mounted() {
-      getVars()
+      getTestEle()
         .then(() => {
           this.$isEle = true;
           ga('send', 'event', 'DocView', 'Inner');
