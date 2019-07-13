@@ -502,7 +502,7 @@
         }
 
         &.current-row td {
-          background-color: $--table-current-row-background-color;
+          background-color: $--table-row-hover-background-color;
         }
       }
     }

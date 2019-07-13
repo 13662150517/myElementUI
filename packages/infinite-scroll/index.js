@@ -1,4 +1,4 @@
-import InfiniteScroll from './src/main.js';
+import InfiniteScroll from './src/main.js.js';
 
 /* istanbul ignore next */
 InfiniteScroll.install = function(Vue) {
