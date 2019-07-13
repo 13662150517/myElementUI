@@ -45,14 +45,18 @@ class TableLayout {
       scrollX = this.scrollX;
     }
     const height = this.height;
-    if (height === null) return;
+    if (height === null) return false;
     const bodyWrapper = this.table.bodyWrapper;
     if (this.table.$el && bodyWrapper) {
       const body = bodyWrapper.querySelector('.el-table__body');
+      const prevScrollY = this.scrollY;
       let offsetHeight = body.offsetHeight;
       offsetHeight = scrollX ? offsetHeight + this.gutterWidth : offsetHeight;
-      this.scrollY = offsetHeight > this.bodyHeight;
+      const scrollY = offsetHeight > this.bodyHeight;
+      this.scrollY = scrollY;
+      return prevScrollY !== scrollY;
     }
+    return false;
   }
 
   setHeight(value, prop = 'height') {
@@ -65,8 +69,11 @@ class TableLayout {
 
     if (!el && (value || value === 0)) return Vue.nextTick(() => this.setHeight(value, prop));
 
-    if (value) {
-      el.style[prop] = `${value}px`;
+    if (typeof value === 'number') {
+      el.style[prop] = value + 'px';
+      this.updateElsHeight();
+    } else if (typeof value === 'string') {
+      el.style[prop] = value;
       this.updateElsHeight();
     }
   }
