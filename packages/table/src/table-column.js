@@ -237,7 +237,7 @@ export default {
     },
 
     registerNormalWatchers() {
-      const props = ['label', 'property', 'filterMultiple', 'sortable', 'index', 'formatter', 'className', 'labelClassName'];
+      const props = ['label', 'property', 'filters', 'filterMultiple', 'sortable', 'index', 'formatter', 'className', 'labelClassName', 'showOverflowTooltip'];
       // 一些属性具有别名
       const aliases = {
         prop: 'property',
