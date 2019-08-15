@@ -705,6 +705,9 @@
         immediate: true,
         handler(value) {
           this.store.commit('setData', value);
+          this.$nextTick(()=>{
+            this.doLayout();
+          });
         }
       },
 

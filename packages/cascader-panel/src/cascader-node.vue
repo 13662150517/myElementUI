@@ -75,8 +75,9 @@
       },
 
       handleCheckChange() {
-        const { panel, value } = this;
+        const { panel, value, node } = this;
         panel.handleCheckChange(value);
+        node.handleExpand(node);
       },
 
       handleMultiCheckChange(checked) {
