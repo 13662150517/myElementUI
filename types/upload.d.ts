@@ -19,7 +19,7 @@ export interface ElUploadInternalFileDetail {
   size: number,
   percentage: number,
   uid: number,
-  raw: ElUploadInternalRawFile,
+  raw: File,
   url?: string
 }
 
