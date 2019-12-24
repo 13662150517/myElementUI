@@ -50,9 +50,7 @@
         v-if="!data || data.length === 0"
         class="el-table__empty-block"
         ref="emptyBlock"
-        :style="{
-          width: bodyWidth
-        }">
+        :style="emptyBlockStyle">
         <span class="el-table__empty-text">
           <slot name="empty">{{ emptyText || t('el.table.emptyText') }}</slot>
         </span>
@@ -667,6 +665,18 @@
             height: viewportHeight + 'px'
           };
         }
+      },
+
+      emptyBlockStyle() {
+        if (this.data && this.data.length) return null;
+        let height = '100%';
+        if (this.layout.appendHeight) {
+          height = `calc(100% - ${this.layout.appendHeight}px)`;
+        }
+        return {
+          width: this.bodyWidth,
+          height
+        };
       },
 
       ...mapStates({
