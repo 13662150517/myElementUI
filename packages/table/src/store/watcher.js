@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import debounce from 'throttle-debounce/debounce';
 import merge from 'element-ui/src/utils/merge';
 import { getKeysMap, getRowIdentity, getColumnById, getColumnByKey, orderBy, toggleRowStatus } from '../util';
 import expand from './expand';
@@ -174,7 +173,7 @@ export default Vue.extend({
       }
     },
 
-    toggleAllSelection: debounce(10, function() {
+    toggleAllSelection() {
       const states = this.states;
       const { data = [], selection } = states;
       // when only some rows are selected (but not all), select or deselect all of them
@@ -201,7 +200,7 @@ export default Vue.extend({
         this.table.$emit('selection-change', selection ? selection.slice() : []);
       }
       this.table.$emit('select-all', selection);
-    }),
+    },
 
     updateSelectionByRowKey() {
       const states = this.states;

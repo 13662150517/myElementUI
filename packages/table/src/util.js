@@ -168,11 +168,9 @@ export const isSameTableData = (data1, data2) => {
 
   data1 = data1.map(d => d._dataId);
   data1.sort();
-  data1 = data1.join(',');
   data2 = data2.map(d => d._dataId);
   data2.sort();
-  data2 = data2.join(',');
-  return data1 === data2;
+  return data1.toString() === data2.toString();
 };
 
 export const isSameColumns = (columns1, columns2) => {

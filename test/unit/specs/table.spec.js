@@ -555,6 +555,34 @@ describe('Table', () => {
         done();
       }, DELAY);
     });
+
+    it('sort-change', async() => {
+      const vm = createVue({
+        template: `
+          <el-table ref="table" :data="testData" :default-sort = "{prop: 'runtime', order: 'ascending'}">
+            <el-table-column prop="name" />
+            <el-table-column prop="release" />
+            <el-table-column prop="director" />
+            <el-table-column prop="runtime" sortable/>
+          </el-table>
+        `,
+
+        data() {
+          return { testData: getTestData() };
+        }
+      });
+
+      const spy = sinon.spy();
+      vm.$refs.table.$on('sort-change', spy);
+      await waitImmediate();
+      expect(spy.notCalled).to.be.true;// not emit when mounted
+
+      const elm = vm.$el.querySelector('.caret-wrapper');
+      elm.click();
+      await waitImmediate();
+      expect(spy.calledOnce).to.be.true;
+      destroyVM(vm);
+    });
   });
 
   describe('column attributes', () => {
@@ -1144,27 +1172,6 @@ describe('Table', () => {
           }, DELAY);
         }, DELAY);
       });
-
-      it('sort-change', done => {
-        let result;
-        const vm = createTable('sortable="custom"', '', '', '', {
-          methods: {
-            sortChange(...args) {
-              result = args;
-            }
-          }
-        }, '@sort-change="sortChange"');
-        setTimeout(_ => {
-          const elm = vm.$el.querySelector('.caret-wrapper');
-
-          elm.click();
-          setTimeout(_ => {
-            expect(result).to.exist;
-            destroyVM(vm);
-            done();
-          }, DELAY);
-        }, DELAY);
-      });
     });
 
     describe('click sortable column', () => {
@@ -1703,6 +1710,48 @@ describe('Table', () => {
           done();
         }, 50);
       }, 50);
+    });
+
+    it('toggleAllSelection debounce', async() => {
+      const spy = sinon.spy();
+      const vm = createVue({
+        template: `
+        <div>
+          <el-table ref="table" :data="testData" @selection-change="change">
+            <el-table-column type="selection" />
+            <el-table-column prop="name" />
+          </el-table>
+          <el-table ref="table1" :data="testData1" @selection-change="change">
+            <el-table-column type="selection" />
+            <el-table-column prop="name" />
+          </el-table>
+        </div>
+        `,
+
+        data() {
+          return {
+            testData: getTestData(),
+            testData1: getTestData()
+          };
+        },
+
+        methods: {
+          change(selection) {
+            spy(selection);
+          }
+        },
+
+        mounted() {
+          this.$refs.table.toggleAllSelection();
+          this.$refs.table1.toggleAllSelection();
+        }
+      }, true);
+
+      await wait(50);
+      expect(spy.callCount).to.be.equal(2);
+      expect(spy.args[0][0].length).to.be.equal(5);
+      expect(spy.args[1][0].length).to.be.equal(5);
+      destroyVM(vm);
     });
 
     it('clearSelection', () => {
